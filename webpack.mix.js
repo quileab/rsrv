@@ -12,14 +12,15 @@ const mix = require('laravel-mix');
  */
 
 mix.js('resources/js/app.js', 'public/js')
-    .postCss('resources/css/app.css', 'public/css', [
+    .postCss(
+        'resources/css/app.css', 'public/css', [
         require('postcss-import'),
         require('tailwindcss'),
     ]);
 /* mix styles qb.css */
-mix.styles([
-    'public/css/qb.css',
-], 'public/css/qb.css');
+// mix.styles([
+//    'resources/css/qb.css',
+// ], 'public/css/qb.css');
 
 
 if (mix.inProduction()) {

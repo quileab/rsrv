@@ -42,7 +42,7 @@ table.calendar td {
 }
 
 table.calendar td.booked {
-	background-color: rgb(165 180 252);
+	background-color: #f79646;
 }
 
 table.calendar tbody th {

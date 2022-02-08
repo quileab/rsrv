@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use Carbon\Carbon;
+use App\Models\Booking;
 
 class ShowCalendar extends Component
 {
@@ -54,11 +55,31 @@ class ShowCalendar extends Component
 
 
     private function renderCalendar($dt) {
+        $showWeek=false;
+
+        $equip_id = 1;
+        $start = '2022-02-10';
+        $end = '2022-02-20';
+
+        $exists = Booking::where('equipment_id', $equip_id)
+            ->byBusy($start, $end)
+            ->get();
+
+        if($exists)
+        {
+            echo "La reserva ya existe o está ocupada en parte de la fecha";
+        }        
+        //dd($exists);
+
         // Make sure to start at the beginnen of the month
         $dt->startOfMonth();
         
         // Set the headings (weeknumber + weekdays)
-        $headings = ['Semana', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo'];
+        if ($showWeek) {
+            $headings = ['Semana', 'Lun','Mar','Mie','Jue','Vie','Sab','Dom'];
+        }else{
+            $headings = ['Lun','Mar','Mie','Jue','Vie','Sab','Dom'];
+        }
     
         // Create the table
         $calendar = '<table class="calendar">';
@@ -72,7 +93,9 @@ class ShowCalendar extends Component
     
         // Create the rest of the calendar and insert the weeknumber
         $calendar .= '</tr></thead><tr>';
-        $calendar .= '<td>'.$dt->weekOfYear.'</td>';
+        if ($showWeek) {
+            $calendar .= '<td>'.$dt->weekOfYear.'</td>';
+        }
     
         // Day of week isn't monday, add empty preceding column(s)
         if ($dt->format('N') != 1) { 
@@ -87,10 +110,23 @@ class ShowCalendar extends Component
             // Monday has been reached, start a new row
             if ($dt->format('N') == 1) {
                 $calendar .= '</tr><tr>';
-                $calendar .= '<td>'.$dt->weekOfYear.'</td>';
+                if ($showWeek) {
+                    $calendar .= '<td>'.$dt->weekOfYear.'</td>';
+                }
             }
             // Append the column
-            $calendar .= '<td class="day" rel="'.$dt->format('Y-m-d').'">'.$dt->day.'</td>';
+
+            foreach ($exists as $ex) {
+                if($dt->format('Y-m-d')>=date('Y-m-d',strtotime($ex->start_date))
+                && $dt->format('Y-m-d')<=date('Y-m-d',strtotime($ex->end_date))){
+                    $isBooked=' booked';
+                }else 
+                {
+                    $isBooked='';
+                }
+            }
+
+            $calendar .= '<td class="day'.$isBooked.'" rel="'.$dt->format('Y-m-d').'">'.$dt->day.'</td>';
     
             // Increment the date with one day
             $dt->addDay();
