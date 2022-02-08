@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Livewire\ShowCalendar;
+use App\Http\Livewire\ShowEquipment;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,6 +19,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+
+Route::get('/calendar', ShowCalendar::class)->name('calendar');
+Route::get('/equipment', ShowEquipment::class)->name('equipment');
+
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return view('dashboard');
 })->name('dashboard');
+

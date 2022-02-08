@@ -16,6 +16,11 @@ mix.js('resources/js/app.js', 'public/js')
         require('postcss-import'),
         require('tailwindcss'),
     ]);
+/* mix styles qb.css */
+mix.styles([
+    'public/css/qb.css',
+], 'public/css/qb.css');
+
 
 if (mix.inProduction()) {
     mix.version();
