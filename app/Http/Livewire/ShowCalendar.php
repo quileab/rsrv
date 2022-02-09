@@ -13,11 +13,13 @@ class ShowCalendar extends Component
     public $unixCalendar=[];
     public $equipment=null;
     public $message=null;
+    public $available=false;
+    public $bookings=[];
 
     public $startDate;
     public $endDate;
-    public $startTime="10:00";
-    public $endTime="18:00";
+    public $startTime="12:00";
+    public $endTime="12:00";
 
     public function mount()
     {
@@ -41,6 +43,9 @@ class ShowCalendar extends Component
 
     public function updatedStartDate($startDate)
     {
+        $this->message=null;
+        $this->available=false;
+        
         $today=Carbon::now();
         //if $startDate before today, set to today
         if($startDate<$today){
@@ -50,10 +55,56 @@ class ShowCalendar extends Component
 
     public function updatedEndDate($endDate)
     {
+        $this->message=null;
+        $this->available=false;
+
         //if $endDate before $startDate, set to $startDate
         if($endDate<$this->startDate){
             $this->endDate=$this->startDate;
         }
+    }
+
+    public function checkAvailability(){
+        if ($this->startDate>$this->endDate){
+            // switch dates
+            $temp=$this->startDate;
+            $this->startDate=$this->endDate;
+            $this->endDate=$temp;
+        }
+        $this->message=null;
+        // Check if there are any bookings for the current months range
+        $exists = Booking::where('equipment_id', $this->equipment->id)
+        ->byBusy($this->startDate, $this->endDate)
+        ->get();
+        if(count($exists)>0){
+            $this->message="No hay disponibilidad en el rango de fechas seleccionado";
+            $this->available=false;
+            $this->bookings=$exists;
+        }
+        else{
+            $this->message="Fechas disponibles para reservar";
+            $this->available=true;
+            $this->bookings=[];
+        }
+    }
+
+    public function bookIn(){
+        $this->message=null;
+        $this->available=false;
+        // register booking
+        $booking=new Booking();
+        $booking->equipment_id=$this->equipment->id;
+        $booking->user_id=auth()->user()->id;
+        $booking->start_date=$this->startDate.' '.$this->startTime;
+        $booking->end_date=$this->endDate.' '.$this->endTime;
+        $booking->status='pending';
+        $booking->price=$this->equipment->price;
+        $booking->save();
+        // $this->reset('startDate','endDate');
+        // refresh calendar
+        $this->populateUnixCalendar();
+        $this->calendar=$this->renderCalendar($this->dt);
+        $this->render();
     }
 
 
@@ -62,6 +113,11 @@ class ShowCalendar extends Component
         $now=Carbon::now()->startOfMonth();
         // Get last booked date
         $lastBookedDate=Booking::lastBookedDate($this->equipment->id);
+        // If there are no bookings, set $lastBookedDate to now
+        if(!isset($lastBookedDate->status)){
+            return;
+        }        
+        //dd($lastBookedDate, isset($lastBookedDate->status));
         $lastBookedDate=Carbon::parse($lastBookedDate->end_date);
         // get last day of month of $lastBookedDate
         $lastBookedDate=$lastBookedDate->endOfMonth();
@@ -98,6 +154,10 @@ class ShowCalendar extends Component
         // Make sure to start at the beginnen of the month
         $now->startOfMonth();
         $lastBookedDate=Booking::lastBookedDate($this->equipment->id);
+        if (!isset($lastBookedDate->status)){
+            $calendar="<h3 class='w-full p-3 mx-auto text-center'>No hay reservas</h3>";
+            return $calendar;
+        }
         $lastBookedDate=Carbon::parse($lastBookedDate->end_date);
         // get last day of month of $lastBookedDate
         $lastBookedDate=$lastBookedDate->endOfMonth();
@@ -113,7 +173,7 @@ class ShowCalendar extends Component
         for ($month=$now;$month->lte($lastBookedDate);$month->addWeek()) {
             $month->startOfMonth();
             // Create the table
-            $calendar .= '<table class="calendar">';
+            $calendar .= '<table class="bg-white shadow-md calendar">';
             $calendar .= '<caption>'.$month->formatLocalized('%B').' » '.$month->format('Y').'</caption>';
             $calendar .= '<thead><tr>';
     
@@ -159,7 +219,7 @@ class ShowCalendar extends Component
     
             // Close table
             $calendar .= '</tr>';
-            $calendar .= '</table>';
+            $calendar .= '</table><br />';
         }
         // Return calendar html
         return $calendar;

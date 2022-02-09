@@ -17,6 +17,13 @@ class Booking extends Model
     }
 
     public function scopeLastBookedDate($query,$equipment_id){ 
-        return $query->where('equipment_id',$equipment_id)->orderBy('end_date','desc')->first(); 
+        return $query->where('equipment_id',$equipment_id)->orderBy('end_date','desc')->first();
+    }
+
+    public function user(){
+        return $this->belongsTo('App\Models\User');
+    }
+    public function equipment(){
+        return $this->belongsTo('App\Models\Equipment');
     }
 }

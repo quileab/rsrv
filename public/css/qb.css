@@ -1,12 +1,22 @@
+/* variables: */
+/* primary and secondary background color */
+:root{
+  --primary-color: hsl(278, 100%, 45%,0.2);
+  --secondary-color: hsl(27, 90%, 92%, 0.5);
+  --caption-color: hsl(278, 100%, 45%, 1);
+  --header-color: #cc93ec;
+  --booked-color: #ecceff;
+}
+
 table.calendar {
 	margin: auto;
 	width: 600px;
 	border-collapse: collapse;
-	border: 1px solid #f79646; /*for older IE*/
+	border: 1px solid var(--primary-color); /*for older IE*/
 }
 
 table.calendar caption {
-	background-color: #f79646;
+	background-color: var(--caption-color);
 	color: #fff;
 	font-size: x-large;
 	font-weight: bold;
@@ -15,7 +25,7 @@ table.calendar caption {
 
 table.calendar thead th {
 	padding: 8px;
-	background-color: #fde9d9;
+	background-color: var(--header-color);
 	font-size: large;
 }
 
@@ -34,7 +44,7 @@ table.calendar td {
 	padding: 3px;
 	border-width: 2px;
 	border-style: solid;
-	border-color: #f79646 #ccc;
+	border-color: var(--primary-color) var(--secondary-color);
 }
 
 table.calendar td {
@@ -42,7 +52,7 @@ table.calendar td {
 }
 
 table.calendar td.booked {
-	background-color: rgb(165 180 252);
+	background-color: var(--booked-color);
 }
 
 table.calendar tbody th {
