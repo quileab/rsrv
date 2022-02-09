@@ -15,4 +15,8 @@ class Booking extends Model
             ->orWhereRaw('? BETWEEN start_date and end_date', [$start_date]) 
             ->orWhereRaw('? BETWEEN start_date and end_date', [$end_date]); 
     }
+
+    public function scopeLastBookedDate($query,$equipment_id){ 
+        return $query->where('equipment_id',$equipment_id)->orderBy('end_date','desc')->first(); 
+    }
 }

@@ -25,6 +25,8 @@
       <x-jet-input type="time" wire:model="endTime" required />
     </x-jet-label>
   </div>
-
+  <hr />{{$message}} <hr />
+<div class="mb-5 shadow-md">
   {!! $calendar !!}
+</div>
 </div>
