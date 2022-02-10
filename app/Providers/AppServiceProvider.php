@@ -24,8 +24,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-
-
         // Configuración para fechas en español
         //Carbon::setUTF8(true);
         Carbon::setLocale(config('app.locale'));

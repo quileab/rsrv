@@ -27,10 +27,10 @@ class ShowCalendar extends Component
         $this->endDate=Carbon::now()->addDays(7)->format('Y-m-d');
         $this->equipment=session('equipment');
         // pasar a carbon la fecha actual
-        $this->dt=Carbon::now();
+        $this->now=Carbon::now();
         //$this->dt=Carbon::createFromDate(Carbon);
         $this->populateUnixCalendar();
-        $this->calendar=$this->renderCalendar($this->dt);
+        $this->calendar=$this->renderCalendar($this->now);
     }
 
     public function render()
@@ -103,7 +103,7 @@ class ShowCalendar extends Component
         // $this->reset('startDate','endDate');
         // refresh calendar
         $this->populateUnixCalendar();
-        $this->calendar=$this->renderCalendar($this->dt);
+        $this->calendar=$this->renderCalendar($this->now);
         $this->render();
     }
 
@@ -155,7 +155,7 @@ class ShowCalendar extends Component
         $now->startOfMonth();
         $lastBookedDate=Booking::lastBookedDate($this->equipment->id);
         if (!isset($lastBookedDate->status)){
-            $calendar="<h3 class='w-full p-3 mx-auto text-center'>No hay reservas</h3>";
+            $calendar="<h3 class='w-full p-3 mx-auto text-center text-lg font-bold'>No hay reservas</h3>";
             return $calendar;
         }
         $lastBookedDate=Carbon::parse($lastBookedDate->end_date);
