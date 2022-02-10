@@ -337,24 +337,23 @@
 
     body {
       font-family: 'Nunito', sans-serif;
-      background-image: url({{asset("img/calendar.jpg");}});
       background-position: center;
-      background-repeat: no-repeat;
+      background-repeat: repeat-y;
       background-size: cover;
-
     }
 
   </style>
 </head>
 
-<body class="antialiased">
-  <div class="relative flex items-top justify-center sm:items-center py-4 sm:pt-0">
+<body class="antialiased" style="background-image: url({{asset('img/calendar.jpg')}});">
+  <div class="relative flex justify-center py-4 items-top"
+    style="background-color:white; opacity: 0.7;">
     @if (Route::has('login'))
-      <div class="hidden fixed top-0 right-0 px-6 py-4 sm:block">
+      <div class="fixed top-0 right-0 px-6 py-4 sm:block">
         @auth
           <a href="{{ url('/dashboard') }}" class="text-sm text-gray-800">Dashboard</a>
         @else
-          <a href="{{ route('login') }}" class="text-sm text-gray-800">{{ __('Log in') }}</a>
+          <a href="{{ route('login') }}" class="text-sm text-gray-800">{{ __('Login') }}</a>
 
           @if (Route::has('register'))
             <a href="{{ route('register') }}" class="ml-4 text-sm text-gray-800">{{ __('Register') }}</a>
@@ -365,8 +364,8 @@
   </div>
 
   <div class="mx-auto sm:px-6 lg:px-8">
-    <div class="flex justify-center pt-8 sm:justify-start sm:pt-0 items-center text-gray-800">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-auto" fill="rgb(147 51 234)" viewBox="0 0 24 24"
+    <div class="flex items-center justify-center pt-8 text-gray-800 sm:justify-start sm:pt-0">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-auto h-16" fill="rgb(147 51 234)" viewBox="0 0 24 24"
         stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
           d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -374,7 +373,7 @@
       <h1 class="text-xl">RSRV</h1>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2" style="background-color: #1a202c; opacity: 0.5; border-radius: 1rem;">
+    <div class="grid grid-cols-1 md:grid-cols-2" style="background-color: #1a202c; opacity: 0.7; border-radius: 1rem;">
       <div class="p-6">
         <div class="flex items-center">
           <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -383,14 +382,13 @@
               d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253">
             </path>
           </svg>
-          <div class="ml-4 text-lg text-gray-200 leading-7 font-semibold">Información</div>
+          <div class="ml-4 text-lg font-semibold leading-7 text-gray-200">Información</div>
         </div>
 
         <div class="ml-12">
           <div class="mt-2 text-sm text-gray-300">
             Información de contacto
           </div>
-
         </div>
       </div>
 
@@ -403,14 +401,13 @@
             </path>
             <path d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
           </svg>
-          <div class="ml-4 text-lg text-gray-200 leading-7 font-semibold">Equipo</div>
+          <div class="ml-4 text-lg font-semibold leading-7 text-gray-200">Equipo</div>
         </div>
 
         <div class="ml-12">
           <div class="mt-2 text-sm text-gray-300">
             Quienes somos...
           </div>
-
         </div>
       </div>
 
@@ -422,7 +419,7 @@
               d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
             </path>
           </svg>
-          <div class="ml-4 text-lg text-gray-200 leading-7 font-semibold">Imágenes</div>
+          <div class="ml-4 text-lg font-semibold leading-7 text-gray-200">Imágenes</div>
         </div>
 
         <div class="ml-12">
@@ -440,7 +437,7 @@
               d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
             </path>
           </svg>
-          <div class="ml-4 text-lg text-gray-200 leading-7 font-semibold">Pide tu Usuario</div>
+          <div class="ml-4 text-lg font-semibold leading-7 text-gray-200">Pide tu Usuario</div>
         </div>
 
         <div class="ml-12">
@@ -453,7 +450,7 @@
     </div>
 
     {{-- <div class="flex justify-center mt-4 sm:items-center sm:justify-between">
-                    <div class="ml-4 text-center text-sm text-gray-500 sm:text-right sm:ml-0">
+                    <div class="ml-4 text-sm text-center text-gray-500 sm:text-right sm:ml-0">
                         Laravel v{{ Illuminate\Foundation\Application::VERSION }} (PHP v{{ PHP_VERSION }})
                     </div>
                 </div> --}}

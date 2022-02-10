@@ -15,31 +15,33 @@
     </div>
   </div>
 
-  <div class="flex pb-2 my-2 text-right shadow-md">
-    <x-jet-label class="ml-4">Fecha desde
-      <x-jet-input type="date" wire:model="startDate" required autofocus />
-      {{-- <x-jet-input type="time" wire:model="startTime" required /> --}}
-    </x-jet-label>
-    <x-jet-label class="ml-4">Fecha hasta
-      <x-jet-input type="date" wire:model="endDate" required />
-      {{-- <x-jet-input type="time" wire:model="endTime" required /> --}}
-    </x-jet-label>
-    @if ($available)
-      <button
-        class="px-6 mx-2 text-xs text-white bg-purple-700 rounded hover:bg-purple-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-600"
-        wire:click="bookIn()">
-        Registrar Fechas
-      </button>
-    @else
-      <button
-        class="px-6 mx-2 text-xs text-white bg-indigo-700 rounded hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600"
-        wire:click="checkAvailability()">
-        Verificar Disponibilidad
-      </button>
-    @endif
-    @if ($message)
-      <div class="px-5 py-3 text-sm bg-blue-100">{{ $message }}</div>
-    @endif
+  <div class="flex w-full p-2 my-2 bg-white shadow-md">
+    <div class="inline-block w-1/2 sm:w-1/3">
+      <x-jet-label>Fecha desde</x-jet-label>
+        <x-jet-input type="date" wire:model="startDate" required class="w-full"/>
+        {{-- <x-jet-input type="time" wire:model="startTime" required /> --}}
+      <x-jet-label>Fecha hasta</x-jet-label>
+        <x-jet-input type="date" wire:model="endDate" required class="w-full" />
+        {{-- <x-jet-input type="time" wire:model="endTime" required /> --}}
+    </div>
+    <div class="inline-block w-1/2 sm:w-2/3">
+      @if ($available)
+        <button
+          class="px-6 py-2 mx-2 mt-6 text-xs text-white bg-purple-700 rounded hover:bg-purple-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-600"
+          wire:click="bookIn()">
+          Registrar Fechas
+        </button>
+      @else
+        <button
+          class="px-6 py-2 mx-2 mt-6 text-xs text-white bg-indigo-700 rounded hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600"
+          wire:click="checkAvailability()">
+          Verificar Disponibilidad
+        </button>
+      @endif
+      @if ($message)
+        <div class="px-3 py-3 m-2 text-sm bg-blue-100">{{ $message }}</div>
+      @endif
+    </div>
   </div>
 
   <div class="flex py-3 justify-evenly">
