@@ -11,6 +11,16 @@ class ShowEquipment extends Component
     public $confirmation=false;
     public $edit=false;
     public $deleteEquipment=null;
+    // equiment fields
+    public $equip_name='';
+    public $equip_description='';
+    public $equip_serial_number='';
+    public $equip_model='';
+    public $equip_manufacturer='';
+    public $equip_location='';
+    public $equip_image_path='';
+    public $equip_price=0;
+    public $equip_status='';
 
     public function render()
     {
@@ -42,10 +52,10 @@ class ShowEquipment extends Component
 
     public function edit($id)
     {
-        $this->edit=true;
         $equipment=Equipment::find($id);
         session(['equipment'=>$equipment]);
-        return redirect()->route('equipment');
+        $this->edit=true;
+        //return redirect()->route('equipment');
     }   
 }
 

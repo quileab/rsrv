@@ -1,6 +1,16 @@
 <a href="/">
-    <svg class="w-16 h-16" viewbox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M11.395 44.428C4.557 40.198 0 32.632 0 24 0 10.745 10.745 0 24 0a23.891 23.891 0 0113.997 4.502c-.2 17.907-11.097 33.245-26.602 39.926z" fill="#6875F5"/>
-        <path d="M14.134 45.885A23.914 23.914 0 0024 48c13.255 0 24-10.745 24-24 0-3.516-.756-6.856-2.115-9.866-4.659 15.143-16.608 27.092-31.75 31.751z" fill="#6875F5"/>
-    </svg>
+    <svg viewBox="0 0 158.75 158.75" fill="none" version="1.1" id="svg5"
+    xmlns:svg="http://www.w3.org/2000/svg" {{ $attributes }}>
+      <path
+        style="fill:none;stroke:#000000;stroke-width:9.65182;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+        d="M 7.828611,8.1893191 23.432627,151.41689 149.0078,96.802337 138.2336,17.593149 Z" id="path1168" />
+      <path
+        style="fill:none;stroke:#000000;stroke-width:9.61346;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+        d="m 50.340663,70.030828 78.754147,20.71927 C 109.54921,73.129137 105.09019,52.52092 119.15791,28.244274 Z"
+        id="path2155" />
+      <path id="path6376"
+        style="fill:none;stroke:#000000;stroke-width:37.7953;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+        d="m 216.28283,322.79261 c -0.46831,53.87405 -12.02494,78.82878 -29.12866,81.41884 -22.97131,3.4786 -50.3879,-58.65551 -58.73248,-135.02418 -8.34458,-76.36866 3.51272,-141.09766 26.48403,-144.57627 17.16991,-2.60009 32.34773,15.93191 44.36922,68.21476"
+        transform="scale(0.26458333)" />
+  </svg>
 </a>
