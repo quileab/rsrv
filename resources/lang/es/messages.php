@@ -4,7 +4,7 @@ return [
 
     'Email' => 'Email',
     'Password' => 'Contraseña',
-    'Rememberme' => 'Recuérdame',
+    'Remember me' => 'Recuérdame',
     'Forgot your password?' => '¿Olvidaste tu contraseña?',
     'Manage Account' => 'Administrar Cuenta',
     'Profile' => 'Perfil',

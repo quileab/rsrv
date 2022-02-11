@@ -345,9 +345,8 @@
   </style>
 </head>
 
-<body class="antialiased" style="background-image: url({{asset('img/calendar.jpg')}});">
-  <div class="relative flex justify-center py-4 items-top"
-    style="background-color:white; opacity: 0.7;">
+<body class="antialiased" style="background-image: url({{ asset('img/calendar.jpg') }});">
+  <div class="relative flex justify-center py-4 items-top" style="background-color:white; opacity: 0.7;">
     @if (Route::has('login'))
       <div class="fixed top-0 right-0 px-6 py-4 sm:block">
         @auth
@@ -449,13 +448,11 @@
       </div>
     </div>
 
-    {{-- <div class="flex justify-center mt-4 sm:items-center sm:justify-between">
-                    <div class="ml-4 text-sm text-center text-gray-500 sm:text-right sm:ml-0">
-                        Laravel v{{ Illuminate\Foundation\Application::VERSION }} (PHP v{{ PHP_VERSION }})
-                    </div>
-                </div> --}}
+    <div class="flex justify-center mt-4 sm:items-center sm:justify-between">
+      <div class="ml-4 text-sm text-center text-gray-500 sm:text-right sm:ml-0">
+        <small>Framework v{{ Illuminate\Foundation\Application::VERSION }} Engine v{{ PHP_VERSION }}</small>
+      </div>
+    </div>
   </div>
-
 </body>
-
 </html>

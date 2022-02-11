@@ -2,9 +2,10 @@
 
 namespace App\Http\Livewire;
 
-use Livewire\Component;
 use Carbon\Carbon;
 use App\Models\Booking;
+use Livewire\Component;
+use Illuminate\Support\Facades\Session;
 
 class ShowCalendar extends Component
 {
@@ -23,9 +24,14 @@ class ShowCalendar extends Component
 
     public function mount()
     {
+        if (Session::has('equipment')) {
+            $this->equipment=session('equipment');
+        }else{
+            //redirect to equipment page
+            return redirect()->route('equipment');
+        }
         $this->startDate=Carbon::now()->format('Y-m-d');
         $this->endDate=Carbon::now()->addDays(7)->format('Y-m-d');
-        $this->equipment=session('equipment');
         // pasar a carbon la fecha actual
         $this->now=Carbon::now();
         //$this->dt=Carbon::createFromDate(Carbon);
