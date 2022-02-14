@@ -2,7 +2,9 @@
 
 use App\Http\Livewire\ShowCalendar;
 use App\Http\Livewire\ShowEquipment;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,4 +28,6 @@ Route::middleware(['auth:sanctum'])->group(function() {
     Route::get('/calendar', ShowCalendar::class)->name('calendar');
     Route::get('/equipment', ShowEquipment::class)->name('equipment');
 });
+
+
 

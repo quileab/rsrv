@@ -116,8 +116,9 @@ class ShowEquipment extends Component
         $equipment->location=$this->equip_location;
         $equipment->price=$this->equip_price;
         $equipment->status=$this->equip_status;
-        $equipment->image_path=$this->image->store('images');
+        $equipment->image_path=$this->image->store('public/images');
         $equipment->save();
+        //dd($equipment);
         $this->editModal=false;
     }
 

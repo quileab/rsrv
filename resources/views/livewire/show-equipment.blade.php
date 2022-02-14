@@ -59,17 +59,20 @@
           <x-jet-label for="equip_image_path">Imagen</x-label>
             <x-jet-input type="text" wire:model.defer="equip_image_path" maxlength="240" />
             <x-jet-input-error for="equip_image_path" class="mt-1" />
-
+            <div class="w-28 h-20 overflow-hidden bg-gray-500">
             @if($image)
-              <img src="{{ $image->temporaryUrl() }}" alt="equipment image" class="m-2 w-16 h-auto">
+            <img src="{{ $image->temporaryUrl() }}" alt="equipment image" class="m-2 w-full h-auto">
             @endif
-            <form wire:submit.prevent="saveImage">
-              <x-jet-input type="file" wire:model="image" />
-           
-              @error('image') <span class="error">{{ $message }}</span> @enderror
-           
-              <x-jet-button type="submit">Guardar Imagen</x-jet-button>
-            </form>
+            <div wire:loading wire:target="image" class="inline-block">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="w-6 h-6 animate-spin" viewBox="0 0 16 16">
+                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                <path d="M10 8a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM8 4a4 4 0 0 0-4 4 .5.5 0 0 1-1 0 5 5 0 0 1 5-5 .5.5 0 0 1 0 1zm4.5 3.5a.5.5 0 0 1 .5.5 5 5 0 0 1-5 5 .5.5 0 0 1 0-1 4 4 0 0 0 4-4 .5.5 0 0 1 .5-.5z"/>
+              </svg> Cargando... 
+            </div>
+            </div>
+            <x-jet-input type="file" wire:model="image" />
+            @error('image') <span class="error">{{ $message }}</span> @enderror
+
         </div>
         <div class="mx-1 w-1/2">
           <x-jet-label for="equip_price">Precio <small>(por día)</small></x-label>
@@ -128,7 +131,11 @@
 
     @foreach ($equipment as $item)
       <div class="w-48 max-w-sm m-3 overflow-hidden bg-white border border-gray-200 rounded-lg shadow-lg">
-        <img class="h-32 rounded-t-lg" src="{{ $item->image_path }}" alt="{{ $item->description }}" />
+        @if (stripos($item->image_path, 'http')===0)
+          <img class="h-32 rounded-t-lg" src="{{ $item->image_path }}" alt="{{ $item->description }}" />
+        @else
+          <img class="h-32 rounded-t-lg" src="{{ Storage::url($item->image_path) }}" alt="{{ $item->description }}" />
+        @endif
         <div class="p-4">
           <h5 class="w-full text-lg font-medium text-gray-900 h-7 overflow-clip">{{ $item->name }}</h5>
           <p class="text-gray-700 text-sm mb-4 h-20 text-ellipsis overflow-hidden ...">
