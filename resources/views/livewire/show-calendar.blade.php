@@ -19,10 +19,10 @@
     <div class="inline-block w-1/2 sm:w-1/3">
       <x-jet-label>Fecha desde</x-jet-label>
         <x-jet-input type="date" wire:model="startDate" required class="w-full"/>
-        {{-- <x-jet-input type="time" wire:model="startTime" required /> --}}
+        <x-jet-input type="time" wire:model="startTime" required />
       <x-jet-label>Fecha hasta</x-jet-label>
         <x-jet-input type="date" wire:model="endDate" required class="w-full" />
-        {{-- <x-jet-input type="time" wire:model="endTime" required /> --}}
+        <x-jet-input type="time" wire:model="endTime" required />
     </div>
     <div class="inline-block w-1/2 sm:w-2/3">
       @if ($available)
