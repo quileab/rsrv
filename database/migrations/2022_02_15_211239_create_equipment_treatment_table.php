@@ -15,6 +15,11 @@ return new class extends Migration
     {
         Schema::create('equipment_treatment', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('equipment_id');
+            $table->unsignedBigInteger('treatment_id');
+            $table->string('notes')->nullable();
+            $table->decimal('price', 8, 2)->nullable();
+            $table->integer('duration')->nullable();
             $table->timestamps();
         });
     }

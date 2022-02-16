@@ -3,7 +3,7 @@
         'Dashboard' => 'dashboard',
         'Ubicaciones' => 'locations',
         'Equipos' => 'equipment',
-        //'Tratamientos' => 'treatments',
+        'Tratamientos' => 'treatments',
         //'Users' => 'users',
         'Calendario' => 'calendar',
         ];

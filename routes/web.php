@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Livewire\Treatments;
 use App\Http\Livewire\Locations;
 use App\Http\Livewire\ShowCalendar;
 use App\Http\Livewire\ShowEquipment;
@@ -29,6 +30,7 @@ Route::middleware(['auth:sanctum'])->group(function() {
     Route::get('/calendar', ShowCalendar::class)->name('calendar');
     Route::get('/equipment', ShowEquipment::class)->name('equipment');
     Route::get('/locations', Locations::class)->name('locations');
+    Route::get('/treatments', Treatments::class)->name('treatments');
 });
 
 
