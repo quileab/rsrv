@@ -13,8 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('subsidiaries', function (Blueprint $table) {
+        Schema::create('locations', function (Blueprint $table) {
             $table->id();
+            $table->string('name',80);
+            $table->string('address')->nullable();
+            $table->string('phone',40)->nullable();
+            $table->string('email',80)->nullable();
             $table->timestamps();
         });
     }
@@ -26,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('subsidiaries');
+        Schema::dropIfExists('locations');
     }
 };

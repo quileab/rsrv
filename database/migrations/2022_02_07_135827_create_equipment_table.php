@@ -20,7 +20,8 @@ class CreateEquipmentTable extends Migration
             $table->string('serial_number',60)->nullable();
             $table->string('model',60)->nullable();
             $table->string('manufacturer',60)->nullable();
-            $table->string('location',60)->nullable();
+            $table->foreignIdFor(\App\Models\Location::class)->nullable();
+            $table->foreignIdFor(\App\Models\Treatment::class)->nullable();
             $table->string('image_path', 2048)->nullable();
             $table->decimal('price',10,2)->nullable();
             $table->string('status',10)->nullable();

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Livewire\Locations;
 use App\Http\Livewire\ShowCalendar;
 use App\Http\Livewire\ShowEquipment;
 use Illuminate\Support\Facades\Auth;
@@ -27,6 +28,7 @@ Route::middleware(['auth:sanctum'])->group(function() {
     })->name('dashboard');
     Route::get('/calendar', ShowCalendar::class)->name('calendar');
     Route::get('/equipment', ShowEquipment::class)->name('equipment');
+    Route::get('/locations', Locations::class)->name('locations');
 });
 
 

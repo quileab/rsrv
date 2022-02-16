@@ -13,12 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('treatments', function (Blueprint $table) {
+        Schema::create('equipment_treatment', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->integer('duration')->default(5);
-            $table->decimal('price', 8, 2);
-            $table->decimal('operatorPrice',8,2); // price for operator
             $table->timestamps();
         });
     }
@@ -30,6 +26,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('treatments');
+        Schema::dropIfExists('equipment_treatment');
     }
 };
