@@ -4,6 +4,8 @@
         'Ubicaciones' => 'locations',
         'Equipos' => 'equipment',
         'Tratamientos' => 'treatments',
+        'Clientes' => 'customers',
+        'Operadores' => 'operators',
         //'Users' => 'users',
         'Calendario' => 'calendar',
         ];
@@ -18,13 +20,13 @@
                 <!-- Logo -->
                 <div class="flex items-center shrink-0">
                     <a href="{{ route('dashboard') }}">
-                        <x-jet-application-mark class="block w-auto h-9" />
+                        <x-jet-application-mark class="text-blue-500 block w-auto h-9" />
                     </a>
                 </div>
 
                 <!-- Navigation Links -->
                 @foreach ($routes as $key=>$route)
-                    <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                    <div class="hidden space-x-4 sm:-my-px sm:ml-5 sm:flex">
                         <x-jet-nav-link href="{{ route($route) }}" :active="request()->routeIs($route)">
                             {{ $key }}
                         </x-jet-nav-link>
@@ -152,7 +154,7 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         @foreach ($routes as $key=>$route)
-            <div class="pt-2 pb-3 space-y-1">
+            <div class="pt-2 pb-2 space-y-1">
                 <x-jet-responsive-nav-link href="{{ route($route) }}" :active="request()->routeIs($route)">
                     {{ $key }}
                 </x-jet-responsive-nav-link>

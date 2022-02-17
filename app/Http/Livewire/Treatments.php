@@ -3,12 +3,10 @@
 namespace App\Http\Livewire;
 
 use Livewire\Component;
-use App\Models\Location;
 use App\Models\Treatment;
 
 class Treatments extends Component
 {
-
     public $confirm=['show'=>false,'title'=>'¿Borrar?','question'=>'¿Estás seguro?'];
     public $confirmation=false;
     public $editModal=false;
@@ -84,5 +82,4 @@ class Treatments extends Component
         $treatment->save();
         $this->editModal=false;
     }
-
 }

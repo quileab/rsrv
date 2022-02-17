@@ -8,4 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Customer extends Model
 {
     use HasFactory;
+
+    // relation has one user
+    public function user()
+    {
+        return $this->hasOne('App\Models\Users');
+    }
 }

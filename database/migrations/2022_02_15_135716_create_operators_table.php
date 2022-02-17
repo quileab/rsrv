@@ -15,6 +15,12 @@ return new class extends Migration
     {
         Schema::create('operators', function (Blueprint $table) {
             $table->id();
+            $table->string('name',120);
+            $table->integer('pid')->nullable();
+            $table->string('address',120)->nullable();
+            $table->string('phone',40)->nullable();
+            $table->string('email',80)->nullable();
+            $table->foreignIdFor(\App\Models\Location::class)->nullable();
             $table->timestamps();
         });
     }
