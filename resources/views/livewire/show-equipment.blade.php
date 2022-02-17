@@ -49,9 +49,14 @@
             <x-jet-input-error for="equip_manufacturer" class="mt-1" />
         </div>
         <div class="mx-1 w-1/2">
-          <x-jet-label for="equip_location">Ubicación</x-label>
-            <x-jet-input type="text" wire:model.defer="equip_location" maxlength="60" />
-            <x-jet-input-error for="equip_location" class="mt-1" />
+          <x-jet-label for="equip_location_id">Ubicación</x-label>
+          <select wire:model.defer="equip_location_id">
+              <option value="">Sin Definir</option>
+              @foreach ($locations as $location)
+                  <option value="{{ $location->id }}">{{ $location->name }}</option>
+              @endforeach
+          </select>
+          <x-jet-input-error for="equip_location_id" class="mt-1" />
         </div>
       </div>
       <div class="flex justify-between w-full my-1">

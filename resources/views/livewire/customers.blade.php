@@ -50,10 +50,10 @@
                     <option value="{{ $location->id }}">{{ $location->name }}</option>
                 @endforeach
             </select>
-            <x-jet-input-error for="model_phone" class="mt-1" />
+            <x-jet-input-error for="model_location_id" class="mt-1" />
           </div>
           <div class="mx-1 w-1/2">
-            <x-jet-label for="model_user">Pertenece a</x-label>
+            <x-jet-label for="model_user_id">Pertenece a</x-label>
             <select wire:model.defer="model_user_id">
                 <option value="">Sin Definir</option>
                 @foreach ($users as $user)

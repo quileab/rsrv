@@ -23,7 +23,7 @@ class ShowEquipment extends Component
     public $equip_serial_number='';
     public $equip_model='';
     public $equip_manufacturer='';
-    public $equip_location='';
+    public $equip_location_id='';
     public $equip_image_path='';
     public $equip_price=0;
     public $equip_status='';
@@ -31,7 +31,9 @@ class ShowEquipment extends Component
     public function render()
     {
         $equipment=Equipment::all();
-        return view('livewire.show-equipment',['equipment'=>$equipment]);
+        $locations=\App\Models\Location::all();
+        return view('livewire.show-equipment',
+        ['equipment'=>$equipment,'locations'=>$locations]);
     }
 
     public function reserve($id)
@@ -65,7 +67,7 @@ class ShowEquipment extends Component
         $this->equip_serial_number=$equipment->serial_number;
         $this->equip_model=$equipment->model;
         $this->equip_manufacturer=$equipment->manufacturer;
-        $this->equip_location=$equipment->location;
+        $this->equip_location_id=$equipment->location_id;
         $this->equip_image_path=$equipment->image_path;
         $this->equip_price=$equipment->price;
         $this->equip_status=$equipment->status;
@@ -81,7 +83,7 @@ class ShowEquipment extends Component
         $equipment->serial_number=$this->equip_serial_number;
         $equipment->model=$this->equip_model;
         $equipment->manufacturer=$this->equip_manufacturer;
-        $equipment->location=$this->equip_location;
+        $equipment->location_id=$this->equip_location_id;
         $equipment->image_path=$this->equip_image_path;
         $equipment->price=$this->equip_price;
         $equipment->status=$this->equip_status;
@@ -97,7 +99,7 @@ class ShowEquipment extends Component
         $this->equip_serial_number='';
         $this->equip_model='';
         $this->equip_manufacturer='';
-        $this->equip_location='';
+        $this->equip_location_id='';
         $this->equip_image_path='';
         $this->equip_price=0;
         $this->equip_status='';
@@ -113,7 +115,7 @@ class ShowEquipment extends Component
         $equipment->serial_number=$this->equip_serial_number;
         $equipment->model=$this->equip_model;
         $equipment->manufacturer=$this->equip_manufacturer;
-        $equipment->location=$this->equip_location;
+        $equipment->location_id=$this->equip_location_id;
         $equipment->price=$this->equip_price;
         $equipment->status=$this->equip_status;
         $equipment->image_path=$this->image->store('public/images');

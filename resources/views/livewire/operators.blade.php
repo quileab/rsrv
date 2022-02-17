@@ -50,7 +50,7 @@
                     <option value="{{ $location->id }}">{{ $location->name }}</option>
                 @endforeach
             </select>
-            <x-jet-input-error for="model_phone" class="mt-1" />
+            <x-jet-input-error for="model_location_id" class="mt-1" />
           </div>
         </div>
       </x-slot>
