@@ -179,7 +179,7 @@ class ShowCalendar extends Component
         for ($month=$now;$month->lte($lastBookedDate);$month->addWeek()) {
             $month->startOfMonth();
             // Create the table
-            $calendar .= '<table class="bg-white shadow-md calendar">';
+            $calendar .= '<table class="bg-white shadow-md calendar rounded-md overflow-hidden">';
             $calendar .= '<caption>'.$month->formatLocalized('%B').' » '.$month->format('Y').'</caption>';
             $calendar .= '<thead><tr>';
     
