@@ -105,12 +105,17 @@
               <td class="border-2 px-4 py-2 w-14">
                   <div class="flex">
                 <button type="button" wire:click='edit({{ $record->id }})'
-                  class="flex bg-indigo-600 text-white w-full px-6 py-2.5 font-medium text-xs uppercase rounded shadow-md hover:bg-indigo-700 hover:shadow-lg focus:bg-indigo-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-indigo-800 active:shadow-lg transition duration-150 ease-in-out items-center">
+                  class="flex bg-indigo-600 text-white w-full px-4 py-1 rounded-l shadow-md hover:bg-indigo-700 hover:shadow-lg focus:bg-indigo-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-indigo-800 active:shadow-lg transition duration-150 ease-in-out items-center">
                   <x-svg.edit class="h-5 w-5" />
                 </button>
                 <button type="button" wire:click='deleteItem({{ $record->id }})'
-                  class="flex bg-red-600 text-white w-full px-6 py-2.5 font-medium text-xs uppercase rounded shadow-md hover:bg-red-700 hover:shadow-lg focus:bg-red-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-red-800 active:shadow-lg transition duration-150 ease-in-out items-center">
+                  class="flex bg-red-600 text-white w-full px-4 py-1 shadow-md hover:bg-red-700 hover:shadow-lg focus:bg-red-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-red-800 active:shadow-lg transition duration-150 ease-in-out items-center">
                   <x-svg.trash class="h-5 w-5" />
+                </button>
+                {{-- PIN OPERATOR --}}
+                <button type="button" wire:click='pin({{ $record->id }})'
+                  class="flex bg-green-600 text-white w-full px-4 py-1 rounded-r shadow-md hover:bg-green-700 hover:shadow-lg focus:bg-green-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-green-800 active:shadow-lg transition duration-150 ease-in-out items-center">
+                  <x-svg.pin class="h-5 w-5" />
                 </button>
               </div>
               </td>

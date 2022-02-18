@@ -15,8 +15,11 @@ class CreateBookingsTable extends Migration
     {
         Schema::create('bookings', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('equipment_id')->constrained();
-            $table->foreignId('user_id')->constrained();
+            $table->foreignIdFor(\App\Models\Equipment::class)->constrained();
+            $table->foreignIdFor(\App\Models\User::class)->constrained();
+            $table->foreignIdFor(\App\Models\Customer::class)->nullable();
+            $table->foreignIdFor(\App\Models\Treatment::class)->nullable();
+            $table->foreignIdFor(\App\Models\Operator::class)->nullable();
             $table->dateTime('start_date');
             $table->dateTime('end_date');
             $table->string('status',10)->default('pending');

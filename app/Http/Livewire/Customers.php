@@ -31,6 +31,13 @@ class Customers extends Component
         ['records'=>$records,'locations'=>$locations,'users'=>$users]);
     }
 
+    public function pin($id)
+    {
+        session([
+            'customer'=>Customer::find($id)
+        ]);
+    }
+
     public function deleteItem($id)
     {
         $this->deleteItem=Customer::find($id);

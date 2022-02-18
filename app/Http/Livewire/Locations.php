@@ -26,6 +26,13 @@ class Locations extends Component
         return view('livewire.locations',['locations'=>$locations]);
     }
 
+    public function pinLocation($id)
+    {
+        session([
+            'location'=>Location::find($id)
+        ]);
+    }
+
     public function deleteItem($id)
     {
         $this->deleteItem=Location::find($id);

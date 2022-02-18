@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use Carbon\Carbon;
 use App\Models\Booking;
 use Livewire\Component;
+use Carbon\CarbonInterval;
 use Illuminate\Support\Facades\Session;
 
 class ShowCalendar extends Component
@@ -113,6 +114,23 @@ class ShowCalendar extends Component
         $this->render();
     }
 
+    public function bookCustomer($date){
+        // create day array parsed every 5 minutes starting from 00:00 until 23:55
+        $datePicked=Carbon::parse($date);
+        $start=Carbon::parse($date.' 06:00');
+        $finish=Carbon::parse($date.' 21:55');
+        $interval=CarbonInterval::minutes(5);
+        $day=[];
+        while($start<=$finish){
+            $day[]=$start->format('Y-m-d H:i');
+            $start->add($interval);
+        }
+        dd($datePicked,$day);
+
+
+        
+    }
+
 
     private function populateUnixCalendar() {
         // Make sure to start at the beginnen of the month
@@ -161,7 +179,7 @@ class ShowCalendar extends Component
         $now->startOfMonth();
         $lastBookedDate=Booking::lastBookedDate($this->equipment->id);
         if (!isset($lastBookedDate->status)){
-            $calendar="<h3 class='w-full p-3 mx-auto text-center text-lg font-bold'>No hay reservas</h3>";
+            $calendar="<h3 class='w-full p-3 mx-auto text-white text-center text-lg font-bold'>No hay reservas</h3>";
             return $calendar;
         }
         $lastBookedDate=Carbon::parse($lastBookedDate->end_date);
@@ -179,7 +197,7 @@ class ShowCalendar extends Component
         for ($month=$now;$month->lte($lastBookedDate);$month->addWeek()) {
             $month->startOfMonth();
             // Create the table
-            $calendar .= '<table class="bg-white shadow-md calendar rounded-md overflow-hidden">';
+            $calendar .= '<table class="bg-white shadow-md calendar">';
             $calendar .= '<caption>'.$month->formatLocalized('%B').' » '.$month->format('Y').'</caption>';
             $calendar .= '<thead><tr>';
     
@@ -212,7 +230,10 @@ class ShowCalendar extends Component
                     }
                 }
                 // Append the column
-                $calendar .= '<td class="day '.$this->unixCalendar[$month->format('Ymd')].'" rel="'.$month->format('Y-m-d').'">'.$month->day.'</td>';
+                $calendar .= '<td class="day '.$this->unixCalendar[$month->format('Ymd')].'" rel="'.$month->format('Y-m-d').'">'.
+                '<button class="w-full h-full" wire:click="bookCustomer(\''.$month->format('Y-m-d').'\')">'.
+                    $month->day.
+                '</button></td>';
     
                 // Increment the date with one day
                 $month->addDay();

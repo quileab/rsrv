@@ -11,6 +11,9 @@
 table.calendar {
 	margin: auto;
 	border-collapse: collapse;
+	border-radius: 0.4rem;
+	overflow: hidden;
+	background-color: white;
 }
 
 table.calendar caption {
@@ -19,6 +22,7 @@ table.calendar caption {
 	font-size: x-large;
 	font-weight: bold;
 	letter-spacing: .2em;
+	border: 0;
 }
 
 table.calendar thead th {
@@ -26,6 +30,7 @@ table.calendar thead th {
 	padding-right: 1rem;
 	background-color: var(--header-color);
 	font-size: large;
+	border: 0px;
 }
 
 table.calendar thead th#thDay {
@@ -44,8 +49,8 @@ table.calendar td {
 	border-width: 2px;
 	border-style: solid;
 	border-color: var(--primary-color) var(--secondary-color);
-	padding-left: 1rem;
-	padding-right: 1rem;
+	padding-left: 0rem;
+	padding-right: 0rem;
 }
 
 table.calendar td {

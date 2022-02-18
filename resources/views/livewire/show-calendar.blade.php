@@ -1,28 +1,34 @@
 <div class="mx-5">
   <div class="flex w-full my-4 shadow-md">
-    <div
-      class="flex-none h-20 overflow-hidden text-center bg-cover rounded-t lg:h-auto lg:w-32 lg:rounded-t-none lg:rounded-l"
-      style="background-image: url('{{ $equipment->image_path }}')" title="{{ $equipment->name }}">
-    </div>
-    <div
-      class="flex flex-col justify-between w-full p-4 leading-normal bg-white border-b border-l border-r rounded-b border-grey-light lg:border-l-0 lg:border-t lg:border-grey-light lg:rounded-b-none lg:rounded-r">
 
+    @if (stripos($equipment->image_path, 'http') === 0)
+      <div
+        class="flex-none h-20 overflow-hidden text-center bg-cover rounded-t lg:h-auto lg:w-32 lg:rounded-t-none lg:rounded-l"
+        style="background-image: url('{{ $equipment->image_path }}')" title="{{ $equipment->name }}">
+      </div>
+    @else
+      <div
+        class="flex-none h-20 overflow-hidden text-center bg-cover rounded-t lg:h-auto lg:w-32 lg:rounded-t-none lg:rounded-l"
+        style="background-image: url('{{ Storage::url($equipment->image_path) }}')" title="{{ $equipment->name }}">
+      </div>
+    @endif
+
+    <div class="flex flex-col justify-between w-full p-4 leading-normal bg-white border-b border-l border-r rounded-b border-grey-light lg:border-l-0 lg:border-t lg:border-grey-light lg:rounded-b-none lg:rounded-r">
       <div class="mb-2 text-xl font-bold text-black">{{ $equipment->name }}</div>
       <p class="text-base text-grey-darker">
         {{ $equipment->description }}
       </p>
-
     </div>
   </div>
 
-  <div class="flex w-full p-2 my-2 bg-white shadow-md">
+  <div class="flex w-full p-3 my-2 bg-white shadow-md rounded">
     <div class="inline-block w-1/2 sm:w-1/3">
       <x-jet-label>Fecha desde</x-jet-label>
-        <x-jet-input type="date" wire:model="startDate" required class="w-full"/>
-        <x-jet-input type="time" wire:model="startTime" required />
+      <x-jet-input type="date" wire:model="startDate" required class="w-full" />
+      {{-- <x-jet-input type="time" wire:model="startTime" required /> --}}
       <x-jet-label>Fecha hasta</x-jet-label>
-        <x-jet-input type="date" wire:model="endDate" required class="w-full" />
-        <x-jet-input type="time" wire:model="endTime" required />
+      <x-jet-input type="date" wire:model="endDate" required class="w-full" />
+      {{-- <x-jet-input type="time" wire:model="endTime" required /> --}}
     </div>
     <div class="inline-block w-1/2 sm:w-2/3">
       @if ($available)

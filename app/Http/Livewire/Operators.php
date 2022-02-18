@@ -29,6 +29,13 @@ class Operators extends Component
         ['records'=>$records,'locations'=>$locations]);
     }
 
+    public function pin($id)
+    {
+        session([
+            'operator'=>Operator::find($id)
+        ]);
+    }
+
     public function deleteItem($id)
     {
         $this->deleteItem=Operator::find($id);
