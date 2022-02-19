@@ -28,9 +28,7 @@ class Locations extends Component
 
     public function pinLocation($id)
     {
-        session([
-            'location'=>Location::find($id)
-        ]);
+        session(['location'=>Location::find($id)]);
     }
 
     public function deleteItem($id)

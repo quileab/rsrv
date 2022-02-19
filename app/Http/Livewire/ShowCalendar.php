@@ -115,6 +115,11 @@ class ShowCalendar extends Component
     }
 
     public function bookCustomer($date){
+        if (!Session::has('customer')) {
+            $this->message="Debe seleccionar un cliente";
+            return;
+        }
+
         // create day array parsed every 5 minutes starting from 00:00 until 23:55
         $datePicked=Carbon::parse($date);
         $start=Carbon::parse($date.' 06:00');
@@ -126,9 +131,7 @@ class ShowCalendar extends Component
             $start->add($interval);
         }
         dd($datePicked,$day);
-
-
-        
+       
     }
 
 

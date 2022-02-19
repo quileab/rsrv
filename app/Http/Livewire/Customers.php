@@ -33,9 +33,7 @@ class Customers extends Component
 
     public function pin($id)
     {
-        session([
-            'customer'=>Customer::find($id)
-        ]);
+        session(['customer'=>Customer::find($id)]);
     }
 
     public function deleteItem($id)

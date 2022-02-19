@@ -19,29 +19,25 @@ class Treatments extends Component
     public $treatment_price=0;
     public $treatment_operatorPrice=0;
 
-    public function render()
-    {
+    public function render(){
         $treatments=Treatment::all();
         return view('livewire.treatments',['treatments'=>$treatments]);
     }
 
-    public function deleteItem($id)
-    {
+    public function deleteItem($id){
         $this->deleteItem=Treatment::find($id);
         $this->confirm['title']='¿Borrar '.$this->treatment_name.'?';
         $this->confirm['question']='¿Estás seguro?';
         $this->confirm['show']=true;
     }
 
-    public function delete()
-    {
+    public function delete(){
         $this->deleteItem->delete();
         $this->confirm['show']=false;
         $this->editModal=false;
     }
 
-    public function edit($id)
-    {
+    public function edit($id){
         $treatment=Treatment::find($id);
         $this->treatment_id=$treatment->id;
         $this->treatment_name=$treatment->name;
@@ -51,8 +47,7 @@ class Treatments extends Component
         $this->editModal=true;
     }
 
-    public function saveEdit($id)
-    {
+    public function saveEdit($id){
         $treatment=Treatment::find($id);
         $treatment->name=$this->treatment_name;
         $treatment->duration=$this->treatment_duration;
@@ -62,8 +57,7 @@ class Treatments extends Component
         $this->editModal=false;
     }
     
-    public function create()
-    {
+    public function create(){
         $this->treatment_id=null;
         $this->treatment_name='';
         $this->treatment_duration=5;
@@ -72,8 +66,7 @@ class Treatments extends Component
         $this->editModal=true;
     }
 
-    public function saveNewItem()
-    { 
+    public function saveNewItem(){ 
         $treatment=new Treatment;
         $treatment->name=$this->treatment_name;
         $treatment->duration=$this->treatment_duration;

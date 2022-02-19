@@ -21,37 +21,30 @@ class Operators extends Component
     public $model_address=null;
     public $model_location_id=null;
 
-    public function render()
-    {
+    public function render(){
         $records=Operator::all();
         $locations=\App\Models\Location::all();
         return view('livewire.operators',
         ['records'=>$records,'locations'=>$locations]);
     }
 
-    public function pin($id)
-    {
-        session([
-            'operator'=>Operator::find($id)
-        ]);
+    public function pin($id){
+        session(['operator'=>Operator::find($id)]);
     }
 
-    public function deleteItem($id)
-    {
+    public function deleteItem($id){
         $this->deleteItem=Operator::find($id);
         $this->confirm['title']='¿Borrar '.$this->model_name.'?';
         $this->confirm['question']='¿Estás seguro?';
         $this->confirm['show']=true;
     }
 
-    public function delete()
-    {
+    public function delete(){
         $this->deleteItem->delete();
         $this->editModal=false;
     }
 
-    public function edit($id)
-    {
+    public function edit($id){
         $record=Operator::find($id);
         $this->model_id=$record->id;
         $this->model_name=$record->name;
@@ -63,8 +56,7 @@ class Operators extends Component
         $this->editModal=true;
     }
 
-    public function saveEdit($id)
-    {
+    public function saveEdit($id){
         $record=Operator::find($id);
         $record->name=$this->model_name;
         $record->pid=$this->model_pid;
@@ -76,8 +68,7 @@ class Operators extends Component
         $this->editModal=false;
     }
     
-    public function create()
-    {
+    public function create(){
         $this->model_id=null;
         $this->model_name='';
         $this->model_pid=null;
@@ -88,8 +79,7 @@ class Operators extends Component
         $this->editModal=true;
     }
 
-    public function saveNewItem()
-    { 
+    public function saveNewItem(){ 
         $record=new Operator;
         $record->name=$this->model_name;
         $record->pid=$this->model_pid;
