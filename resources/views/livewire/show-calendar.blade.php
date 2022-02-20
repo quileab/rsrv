@@ -1,6 +1,46 @@
 <div class="mx-5">
-  <div class="flex w-full my-4 shadow-md">
 
+  {{-- jetstream modal, daily booking selection --}}
+  <x-jet-dialog-modal wire:model="dayModal">
+    <x-slot name="title">Agenda del día {{ Carbon\Carbon::parse($daySelected)->format('d M') }}</x-slot>
+    <x-slot name="content">
+      <table class="table table-sm table-hover">
+        <thead>
+          <tr>
+            <th>Hora</th>
+            <th>Cliente</th>
+            <th>Servicio</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @foreach ($daySlots as $slot)
+            <tr>
+              <td>{{Carbon\Carbon::parse($slot)->format('H:i')}}</td>
+              <td>Cliente</td>
+              <td>Servicio</td>
+              <td>
+                <button type="submit" class="btn btn-sm btn-danger">
+                  <i class="fa fa-trash"></i>
+                </button>
+              </td>
+            </tr>
+          @endforeach
+        </tbody>
+      </table>
+    </x-slot>
+    <x-slot name="footer">
+      <x-jet-secondary-button wire:click="$toggle('dayModal')">
+        Cancelar
+      </x-jet-secondary-button>
+      <x-jet-danger-button class="ml-2" wire:click="bookCustomerTreatment()">
+        <x-svg.check class="w-5 h-5" />&nbsp;Agendar
+      </x-jet-danger-button>
+    </x-slot>
+  </x-jet-dialog-modal>
+
+
+  <div class="flex w-full my-4 shadow-md">
     @if (stripos($equipment->image_path, 'http') === 0)
       <div
         class="flex-none h-20 overflow-hidden text-center bg-cover rounded-t lg:h-auto lg:w-32 lg:rounded-t-none lg:rounded-l"
@@ -13,7 +53,8 @@
       </div>
     @endif
 
-    <div class="flex flex-col justify-between w-full p-4 leading-normal bg-white border-b border-l border-r rounded-b border-grey-light lg:border-l-0 lg:border-t lg:border-grey-light lg:rounded-b-none lg:rounded-r">
+    <div
+      class="flex flex-col justify-between w-full p-4 leading-normal bg-white border-b border-l border-r rounded-b border-grey-light lg:border-l-0 lg:border-t lg:border-grey-light lg:rounded-b-none lg:rounded-r">
       <div class="mb-2 text-xl font-bold text-black">{{ $equipment->name }}</div>
       <p class="text-base text-grey-darker">
         {{ $equipment->description }}

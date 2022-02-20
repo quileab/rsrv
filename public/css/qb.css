@@ -8,6 +8,19 @@
   --booked-color: #ecceff;
 }
 
+button.calendar{
+	border: 1px solid var(--secondary-color);
+	padding: 5px;
+	font-weight: bold;
+	cursor: pointer;
+	transition: all;
+	transition-duration: 0.2s;
+}
+button.calendar:hover{
+	background-color: var(--primary-color);
+	border: 1px solid var(--caption-color);
+}
+
 table.calendar {
 	margin: auto;
 	border-collapse: collapse;

@@ -30,6 +30,7 @@ class Operators extends Component
 
     public function pin($id){
         session(['operator'=>Operator::find($id)]);
+        $this->emit('notify');
     }
 
     public function deleteItem($id){

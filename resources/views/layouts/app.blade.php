@@ -24,6 +24,7 @@
 
         <div class="min-h-screen bg-gradient-to-b from-violet-900 to-fuchsia-900">
             @livewire('navigation-menu')
+            @livewire('notifications')
 
             <!-- Page Heading -->
             @if (isset($header))

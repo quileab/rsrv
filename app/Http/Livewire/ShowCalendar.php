@@ -17,9 +17,12 @@ class ShowCalendar extends Component
     public $message=null;
     public $available=false;
     public $bookings=[];
+    public $dayModal=false;
 
     public $startDate;
     public $endDate;
+    public $daySelected;
+    public $daySlots=[];
     public $startTime="12:00";
     public $endTime="12:00";
 
@@ -130,7 +133,10 @@ class ShowCalendar extends Component
             $day[]=$start->format('Y-m-d H:i');
             $start->add($interval);
         }
-        dd($datePicked,$day);
+        $this->daySelected=$datePicked->copy();
+        $this->daySlots=$day;
+        $this->dayModal=true;
+        //dd($datePicked,$day);
        
     }
 
@@ -234,7 +240,7 @@ class ShowCalendar extends Component
                 }
                 // Append the column
                 $calendar .= '<td class="day '.$this->unixCalendar[$month->format('Ymd')].'" rel="'.$month->format('Y-m-d').'">'.
-                '<button class="w-full h-full" wire:click="bookCustomer(\''.$month->format('Y-m-d').'\')">'.
+                '<button class="calendar w-full h-full" wire:click="bookCustomer(\''.$month->format('Y-m-d').'\')">'.
                     $month->day.
                 '</button></td>';
     
