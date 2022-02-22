@@ -15,6 +15,7 @@ class ShowEquipment extends Component
     public $editModal=false;
     public $deleteEquipment=null;
     public $image=null;
+    public $imageSelect=false;
 
     // equiment fields
     public $equip_id;
@@ -28,38 +29,33 @@ class ShowEquipment extends Component
     public $equip_price=0;
     public $equip_status='';
 
-    public function render()
-    {
+    public function render(){
         $equipment=Equipment::all();
         $locations=\App\Models\Location::all();
         return view('livewire.show-equipment',
         ['equipment'=>$equipment,'locations'=>$locations]);
     }
 
-    public function reserve($id)
-    {
+    public function reserve($id){
         $equipment=Equipment::find($id);
         session(['equipment'=>$equipment]);
         return redirect()->route('calendar');
     }
 
-    public function confirmDelete($id)
-    {
+    public function confirmDelete($id){
         $this->deleteEquipment=Equipment::find($id);
         $this->confirm['title']='¿Borrar '.$this->deleteEquipment->name.'?';
         $this->confirm['question']='¿Estás seguro de que quieres eliminar este equipo?';
         $this->confirm['show']=true;
     }
 
-    public function delete()
-    {
+    public function delete(){
         $this->deleteEquipment->delete();
         $this->confirm['show']=false;
         $this->editModal=false;
     }
 
-    public function edit($id)
-    {
+    public function edit($id){
         $equipment=Equipment::find($id);
         $this->equip_id=$equipment->id;
         $this->equip_name=$equipment->name;
@@ -75,8 +71,7 @@ class ShowEquipment extends Component
         //return redirect()->route('equipment');
     }
 
-    public function saveEdit($id)
-    {
+    public function saveEdit($id){
         $equipment=Equipment::find($id);
         $equipment->name=$this->equip_name;
         $equipment->description=$this->equip_description;
@@ -91,8 +86,7 @@ class ShowEquipment extends Component
         $this->editModal=false;
     }
     
-    public function create()
-    {
+    public function create(){
         $this->equip_id=null;
         $this->equip_name='';
         $this->equip_description='';
@@ -103,11 +97,11 @@ class ShowEquipment extends Component
         $this->equip_image_path='';
         $this->equip_price=0;
         $this->equip_status='';
+        $this->image=null;
         $this->editModal=true;
     }
 
-    public function saveNewEquipment()
-    { 
+    public function saveNewEquipment(){ 
         // check this url: https://www.youtube.com/watch?v=iBIZhhMkZzU
         $equipment=new Equipment;
         $equipment->name=$this->equip_name;
@@ -119,13 +113,13 @@ class ShowEquipment extends Component
         $equipment->price=$this->equip_price;
         $equipment->status=$this->equip_status;
         $equipment->image_path=$this->image->store('public/images');
+        $this->image=null;
         $equipment->save();
         //dd($equipment);
         $this->editModal=false;
     }
 
-    public function saveImage()
-    {
+    public function saveImage(){
         //todo: save image
     }
 }

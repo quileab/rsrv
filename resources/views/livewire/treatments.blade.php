@@ -25,7 +25,7 @@
           </div>
           <div class="w-1/2 mx-2">
             <x-jet-label for="treatment_duration">Duración <small>minutos</small></x-label>
-              <x-jet-input type="number" wire:model.defer="treatment_duration" maxlength="60" />
+              <x-jet-input type="number" wire:model.defer="treatment_duration" min="5" step="5" />
               <x-jet-input-error for="treatment_duration" class="mt-1" />
           </div>
         </div>
@@ -36,7 +36,7 @@
               <x-jet-input-error for="treatment_price" class="mt-1" />
           </div>
           <div class="mx-1 w-1/2">
-            <x-jet-label for="treatment_operatorPrice">Con Operador</x-label>
+            <x-jet-label for="treatment_operatorPrice">Costo Operador</x-label>
               <x-jet-input type="email" wire:model.defer="treatment_operatorPrice" maxlength="60" />
               <x-jet-input-error for="treatment_operatorPrice" class="mt-1" />
           </div>
@@ -87,9 +87,9 @@
           @foreach ($treatments as $treatment)
             <tr class="text-left text-gray-900">
               <td class="border-2 px-4 py-2">{{ $treatment->name }}</td>
-              <td class="border-2 px-4 py-2">{{ $treatment->duration }}</td>
-              <td class="border-2 px-4 py-2">{{ $treatment->price }}</td>
-              <td class="border-2 px-4 py-2">{{ $treatment->operatorPrice }}</td>
+              <td class="border-2 px-4 py-2 text-right">{{ $treatment->duration }}</td>
+              <td class="border-2 px-4 py-2 text-right">{{ $treatment->price }}</td>
+              <td class="border-2 px-4 py-2 text-right">{{ $treatment->operatorPrice }}</td>
               <td class="border-2 px-4 py-2 w-14">
                   <div class="flex">
                 <button type="button" wire:click='edit({{ $treatment->id }})'

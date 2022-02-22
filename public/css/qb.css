@@ -20,6 +20,26 @@ button.calendar:hover{
 	background-color: var(--primary-color);
 	border: 1px solid var(--caption-color);
 }
+/* table tr row even */
+nav.tabbed a{
+	display: inline-block;
+	background-color: rgba(243, 244, 246, 0.4);
+	text-decoration: none;
+	color: white;
+	margin-right:0.1rem;
+	padding: 0.5rem;
+	border-top-left-radius: 0.5rem;
+	border-top-right-radius: 0.5rem;
+
+}
+nav.tabbed a.active{
+	color: var(--caption-color);
+	background-color: rgb(243, 244, 246);
+}
+
+table tr:nth-child(even){
+	background-color: rgba(0,0,0,0.05);
+}
 
 table.calendar {
 	margin: auto;
