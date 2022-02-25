@@ -2,8 +2,10 @@
 
 namespace App\Http\Livewire;
 
+use Carbon\Carbon;
 use Livewire\Component;
 use App\Models\Equipment;
+use Hamcrest\Arrays\IsArray;
 use Livewire\WithFileUploads;
 
 class ShowEquipment extends Component
@@ -32,8 +34,18 @@ class ShowEquipment extends Component
     public function render(){
         $equipment=Equipment::all();
         $locations=\App\Models\Location::all();
+
+        //$this->allTreatments=\App\Models\Treatment::all();
+        //dd($this->equip_treatments);
+
         return view('livewire.show-equipment',
-        ['equipment'=>$equipment,'locations'=>$locations]);
+        ['equipment'=>$equipment,
+         'locations'=>$locations,
+        ]);
+    }
+
+    public function debug(){
+        dd($this->equip_treatments,$this->allTreatments);
     }
 
     public function reserve($id){
@@ -57,6 +69,7 @@ class ShowEquipment extends Component
 
     public function edit($id){
         $equipment=Equipment::find($id);
+        session(['equipment'=>$equipment]);
         $this->equip_id=$equipment->id;
         $this->equip_name=$equipment->name;
         $this->equip_description=$equipment->description;

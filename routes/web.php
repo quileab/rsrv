@@ -6,6 +6,7 @@ use App\Http\Livewire\ShowCalendar;
 use App\Http\Livewire\ShowEquipment;
 use App\Http\Livewire\Customers;
 use App\Http\Livewire\Operators;
+use App\Http\Livewire\AssignEquipmentTreatment;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -34,6 +35,7 @@ Route::middleware(['auth:sanctum'])->group(function() {
     Route::get('/treatments', Treatments::class)->name('treatments');
     Route::get('/customers', Customers::class)->name('customers');
     Route::get('/operators', Operators::class)->name('operators');
+    Route::get('/assign-eqpmt-trtmt', AssignEquipmentTreatment::class)->name('assign-eqpmt-trtmt');
 
 });
 

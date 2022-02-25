@@ -1,4 +1,4 @@
-<div x-data="{ tab: 'equipment' }">
+<div>
   {{-- jetstream modal to confirm deletion --}}
   <x-jet-dialog-modal wire:model="confirm.show">
     <x-slot name="title">{{ $confirm['title'] }}</x-slot>
@@ -15,137 +15,113 @@
 
   {{-- jetstream modal to edit equipment --}}
   <x-jet-dialog-modal wire:model="editModal">
-    
-    
-    <x-slot name="title">Editar Equipo » <small>#{{ $equip_id }}</small>
-    
-      <nav class="tabbed text-sm">
-        <a :class="{ 'active': tab === 'equipment' }" x-on:click.prevent="tab = 'equipment'" href="#">Equipo</a>
-        <a :class="{ 'active': tab === 'treatment' }" x-on:click.prevent="tab = 'treatment'" href="#">Tratamientos</a>
-      </nav>
 
+
+    <x-slot name="title">Editar Equipo » <small>#{{ $equip_id }}</small>
     </x-slot>
     <x-slot name="content">
-    
-      <div x-show="tab === 'equipment'">
-      <div class="flex justify-between w-full">
-        <div class="w-1/3 mx-1">
-          <x-jet-label for="equip_name">Nombre</x-label>
-            <x-jet-input type="text" wire:model.defer="equip_name" maxlength="60" />
-            <x-jet-input-error for="equip_name" class="mt-1" />
-        </div>
-        <div class="w-2/3 mx-2">
-          <x-jet-label for="equip_description">Descripción</x-label>
-            <textarea wire:model.defer="equip_description" maxlength="250"
-              class="w-full" />{{ $equip_description }}</textarea>
-            <x-jet-input-error for="equip_description" class="mt-1" />
-        </div>
-      </div>
-      <div class="flex justify-between w-full my-1">
-        <div class="mx-1 w-1/2">
-          <x-jet-label for="equip_serial_number">Número de Serie</x-label>
-            <x-jet-input type="text" wire:model.defer="equip_serial_number" maxlength="60" />
-            <x-jet-input-error for="equip_serial_number" class="mt-1" />
-        </div>
-        <div class="mx-1 w-1/2">
-          <x-jet-label for="equip_model">Modelo</x-label>
-            <x-jet-input type="text" wire:model.defer="equip_model" maxlength="60" />
-            <x-jet-input-error for="equip_model" class="mt-1" />
-        </div>
-      </div>
-      <div class="flex justify-between w-full my-1">
-        <div class="mx-1 w-1/2">
-          <x-jet-label for="equip_manufacturer">Fabricante</x-label>
-            <x-jet-input type="text" wire:model.defer="equip_manufacturer" />
-            <x-jet-input-error for="equip_manufacturer" class="mt-1" />
-        </div>
-        <div class="mx-1 w-1/2">
-          <x-jet-label for="equip_location_id">Ubicación</x-label>
-            <select wire:model.defer="equip_location_id">
-              <option value="">Sin Definir</option>
-              @foreach ($locations as $location)
-                <option value="{{ $location->id }}">{{ $location->name }}</option>
-              @endforeach
-            </select>
-            <x-jet-input-error for="equip_location_id" class="mt-1" />
-        </div>
-      </div>
-      <div class="flex justify-between w-full my-1">
-        <div class="mx-1 w-1/2 border shadow-md overflow-clip p-2 bg-violet-200">
-          <div class="flex justify-between">
 
-            <button wire:click="$toggle('imageSelect')"
-              class="text-sm bg-purple-500 hover:bg-purple-700 text-white font-bold py-1 px-3 rounded-md h-11">
-              Cambiar Imagen
-            </button>
-
-            @if ($image != null)
-              <img class="w-32" src="{{ $image->temporaryUrl() }}" alt="equipment image">
-            @else
-              @if (stripos($equip_image_path, 'http') === 0)
-                <img class="w-32" src="{{ $equip_image_path }}" alt="{{ $equip_description }}" />
-              @else
-                <img class="w-32" src="{{ Storage::url($equip_image_path) }}"
-                  alt="{{ $equip_description }}" />
-              @endif
-            @endif
+        <div class="flex justify-between w-full">
+          <div class="w-1/3 mx-1">
+            <x-jet-label for="equip_name">Nombre</x-label>
+              <x-jet-input type="text" wire:model.defer="equip_name" maxlength="60" />
+              <x-jet-input-error for="equip_name" class="mt-1" />
           </div>
-          @if ($imageSelect)
-            <x-jet-input type="text" wire:model.defer="equip_image_path" maxlength="240" class="w-full text-sm" />
-            <x-jet-input-error for="equip_image_path" class="mt-1" />
+          <div class="w-2/3 mx-2">
+            <x-jet-label for="equip_description">Descripción</x-label>
+              <textarea wire:model.defer="equip_description" maxlength="250"
+                class="w-full" />{{ $equip_description }}</textarea>
+              <x-jet-input-error for="equip_description" class="mt-1" />
+          </div>
+        </div>
+        <div class="flex justify-between w-full my-1">
+          <div class="mx-1 w-1/2">
+            <x-jet-label for="equip_serial_number">Número de Serie</x-label>
+              <x-jet-input type="text" wire:model.defer="equip_serial_number" maxlength="60" />
+              <x-jet-input-error for="equip_serial_number" class="mt-1" />
+          </div>
+          <div class="mx-1 w-1/2">
+            <x-jet-label for="equip_model">Modelo</x-label>
+              <x-jet-input type="text" wire:model.defer="equip_model" maxlength="60" />
+              <x-jet-input-error for="equip_model" class="mt-1" />
+          </div>
+        </div>
+        <div class="flex justify-between w-full my-1">
+          <div class="mx-1 w-1/2">
+            <x-jet-label for="equip_manufacturer">Fabricante</x-label>
+              <x-jet-input type="text" wire:model.defer="equip_manufacturer" />
+              <x-jet-input-error for="equip_manufacturer" class="mt-1" />
+          </div>
+          <div class="mx-1 w-1/2">
+            <x-jet-label for="equip_location_id">Ubicación</x-label>
+              <select wire:model.defer="equip_location_id">
+                <option value="">Sin Definir</option>
+                @foreach ($locations as $location)
+                  <option value="{{ $location->id }}">{{ $location->name }}</option>
+                @endforeach
+              </select>
+              <x-jet-input-error for="equip_location_id" class="mt-1" />
+          </div>
+        </div>
+        <div class="flex justify-between w-full my-1">
+          <div class="mx-1 w-1/2 border shadow-md overflow-clip p-2 bg-violet-200">
+            <div class="flex justify-between">
 
-            <x-jet-input
-              class="form-control block w-full text-base font-normal
+              <button wire:click="$toggle('imageSelect')"
+                class="text-sm bg-purple-500 hover:bg-purple-700 text-white font-bold py-1 px-3 rounded-md h-11">
+                Cambiar Imagen
+              </button>
+
+              @if ($image != null)
+                <img class="w-32" src="{{ $image->temporaryUrl() }}" alt="equipment image">
+              @else
+                @if (stripos($equip_image_path, 'http') === 0)
+                  <img class="w-32" src="{{ $equip_image_path }}" alt="{{ $equip_description }}" />
+                @else
+                  <img class="w-32" src="{{ Storage::url($equip_image_path) }}"
+                    alt="{{ $equip_description }}" />
+                @endif
+              @endif
+            </div>
+            @if ($imageSelect)
+              <x-jet-input type="text" wire:model.defer="equip_image_path" maxlength="240" class="w-full text-sm" />
+              <x-jet-input-error for="equip_image_path" class="mt-1" />
+
+              <x-jet-input
+                class="form-control block w-full text-base font-normal
               text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300
                 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-blue-700 focus:border-blue-600 focus:outline-none"
-              type="file" wire:model="image" />
-            @error('image') <span class="error">{{ $message }}</span> @enderror
+                type="file" wire:model="image" />
+              @error('image')
+                <span class="error">{{ $message }}</span>
+              @enderror
 
-            <div wire:loading wire:target="image" class="inline-block">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="w-6 h-6 animate-spin"
-                viewBox="0 0 16 16">
-                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
-                <path
-                  d="M10 8a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM8 4a4 4 0 0 0-4 4 .5.5 0 0 1-1 0 5 5 0 0 1 5-5 .5.5 0 0 1 0 1zm4.5 3.5a.5.5 0 0 1 .5.5 5 5 0 0 1-5 5 .5.5 0 0 1 0-1 4 4 0 0 0 4-4 .5.5 0 0 1 .5-.5z" />
-              </svg> Cargando...
+              <div wire:loading wire:target="image" class="inline-block">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="w-6 h-6 animate-spin"
+                  viewBox="0 0 16 16">
+                  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                  <path
+                    d="M10 8a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM8 4a4 4 0 0 0-4 4 .5.5 0 0 1-1 0 5 5 0 0 1 5-5 .5.5 0 0 1 0 1zm4.5 3.5a.5.5 0 0 1 .5.5 5 5 0 0 1-5 5 .5.5 0 0 1 0-1 4 4 0 0 0 4-4 .5.5 0 0 1 .5-.5z" />
+                </svg> Cargando...
+              </div>
+            @endif
+          </div>
+
+          <div class="mx-1 w-1/2 p-2">
+
+            <x-jet-label for="equip_price">Precio <small>(por día)</small></x-jet-label>
+            <x-jet-input type="number" wire:model.defer="equip_price" min="0" step=".01" />
+            <x-jet-input-error for="equip_price" class="mt-1" />
+            <div class="flex items-center mt-2">
+              <x-jet-label for="equip_status">Estado&nbsp;</x-jet-label>
+              <select wire:model.defer="equip_status" class="border bg-white rounded pl-2 pr-5 py-1 outline-none">
+                <option value="">Activo</option>
+                <option value="0">Inactivo</option>
+              </select>
+              <x-jet-input-error for="equip_status" class="mt-1" />
             </div>
-          @endif
-        </div>
-
-        <div class="mx-1 w-1/2 p-2">
-
-          <x-jet-label for="equip_price">Precio <small>(por día)</small></x-jet-label>
-          <x-jet-input type="number" wire:model.defer="equip_price" min="0" step=".01" />
-          <x-jet-input-error for="equip_price" class="mt-1" />
-          <div class="flex items-center mt-2">
-            <x-jet-label for="equip_status">Estado&nbsp;</x-jet-label>
-            <select wire:model.defer="equip_status" class="border bg-white rounded pl-2 pr-5 py-1 outline-none">
-              <option value="">Activo</option>
-              <option value="0">Inactivo</option>
-            </select>
-            <x-jet-input-error for="equip_status" class="mt-1" />
           </div>
         </div>
-      </div>
-    </div>
-    {{-- equipments --}}
-
-    <div x-show="tab === 'treatment'">
-      <div class="flex justify-between w-full my-2 bg-violet-200 p-2 rounded-sm shadow-md">
-        <div class="mx-1 w-1/2">
-          Tratamientos a Asignar
-        </div>
-        <div class="mx-1 w-1/2">
-          Tratamientos Asignados
-          {{-- inline violet button with text "Ver" --}}
-          <button wire:click="populateTreatments()"
-            class="text-sm bg-purple-500 hover:bg-purple-700 text-white font-bold py-1 px-3 rounded-md h-11">
-            Ver
-          </button>
-        </div>
-      </div>
-    </div>
-
 
     </x-slot>
     <x-slot name="footer">
@@ -161,6 +137,7 @@
           Guardar
         </x-jet-button>
       @endif
+
     </x-slot>
   </x-jet-dialog-modal>
 
@@ -231,14 +208,7 @@
 
         </div>
       </div>
-
     @endforeach
   </div>
-
-{{-- @push('scripts')
-<script>
-    // Your JS here.
-</script>
-@endpush --}}
 
 </div>
