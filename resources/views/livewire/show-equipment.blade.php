@@ -186,7 +186,7 @@
           @if (Auth::user()->role == 'admin')
             {{-- button to edit card --}}
             <div class="flex w-full mt-1 text-center justify-evenly">
-              <button type="button" wire:click='edit({{ $item->id }})'
+              <button wire:click='edit({{ $item->id }})'
                 class="inline-block px-3 py-1 text-xs font-medium leading-tight text-white uppercase transition duration-150 ease-in-out bg-blue-600 rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
                   stroke="currentColor">
@@ -194,8 +194,12 @@
                     d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                 </svg>
               </button>
+              <button wire:click='selectTreatments({{ $item->id }})'
+                class="inline-block px-3 py-1 text-xs font-medium leading-tight text-white uppercase transition duration-150 ease-in-out bg-green-600 rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg">
+                Tratamientos
+              </button>
               {{-- button to delete card --}}
-              <button type="button" wire:click='confirmDelete({{ $item->id }})'
+              <button wire:click='confirmDelete({{ $item->id }})'
                 class="inline-block px-3 py-1 text-xs font-medium leading-tight text-white uppercase transition duration-150 ease-in-out bg-red-600 rounded shadow-md hover:bg-red-700 hover:shadow-lg focus:bg-red-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-red-800 active:shadow-lg">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
                   stroke="currentColor">

@@ -48,6 +48,12 @@ class ShowEquipment extends Component
         dd($this->equip_treatments,$this->allTreatments);
     }
 
+    public function selectTreatments($id){
+        $equipment=Equipment::find($id);
+        session(['equipment'=>$equipment]);
+        return redirect()->route('assign-eqpmt-trtmt');
+    }    
+
     public function reserve($id){
         $equipment=Equipment::find($id);
         session(['equipment'=>$equipment]);

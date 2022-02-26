@@ -50,7 +50,7 @@
           </tr>
         </thead>
         <tbody>
-          @foreach ($equipment_treatments as $assignedTreatment)
+          @foreach ($assignedtreatments as $assignedTreatment)
             <tr>
               <td class="border px-4 py-2">{{ $assignedTreatment->name }}</td>
               <td class="border px-4 py-2">

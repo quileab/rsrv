@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use App\Models\Equipment;
 use App\Models\Treatment;
+use Carbon\Carbon;
 
 class AssignEquipmentTreatment extends Component
 {
@@ -16,7 +17,6 @@ class AssignEquipmentTreatment extends Component
     public $equipment_treatments=[];
     public $selected_equipment=null;
 
-
     public function mount(){
         if(session('equipment')){
             $this->selected_equipment=session('equipment');
@@ -25,8 +25,12 @@ class AssignEquipmentTreatment extends Component
 
     public function render()
     {
-        return view('livewire.assign-equipment-treatment',['equipment_treatments'=>$this->equipment_treatments]);
-    }
+      $assignedtreatments=$this->selected_equipment->treatments;
+      session(['message'=>Carbon::now()->format('d-m-Y H:i:s')." - ".$this->selected_equipment->name]);
+      $this->emit('notify');
+      return view('livewire.assign-equipment-treatment',
+        compact('assignedtreatments'));
+    }    
 
     public function EquipmentSearch(){
         $equipments=Equipment::where('name','like','%'.$this->equipment_search.'%')->get();
@@ -40,7 +44,6 @@ class AssignEquipmentTreatment extends Component
         $treatments=Treatment::where('name','like','%'.$this->treatment_search.'%')->get();
         $this->treatments=$treatments;
     }
-    
     public function updatedTreatmentSearch(){
         $this->TreatmentSearch();
     }
@@ -48,29 +51,18 @@ class AssignEquipmentTreatment extends Component
     public function selectEquipment($equipment_id){
         $this->selected_equipment=Equipment::find($equipment_id);
         session(['equipment'=>$this->selected_equipment]);
-        // TODO: Get treatments for this equipment
-        $this->equipment_treatments=$this->selected_equipment->treatments;
     }
 
-    public function unassign($equipment_id,$treatment_id){
-        $equipment=Equipment::find($equipment_id);
+    public function assignTreatment($treatment_id){
         $treatment=Treatment::find($treatment_id);
-        $equipment->treatments()->detach($treatment);
-        $this->equipment_treatments[$equipment_id]=array_diff($this->equipment_treatments[$equipment_id], [$treatment_id]);
+        $this->selected_equipment->treatments()->attach($treatment);
     }
 
-    public function getTreatments($equipment_id){
-        return $this->equipment_treatments[$equipment_id];
-    }
-
-    public function getEquipments($treatment_id){
-        $equipments=[];
-        foreach(Equipment::all() as $equipment){
-            if(in_array($treatment_id,$this->equipment_treatments[$equipment->id])){
-                $equipments[]=$equipment;
-            }
-        }
-        return $equipments;
+    public function unassignTreatment($treatment_id){
+        $treatment=Treatment::find($treatment_id);
+        $this->selected_equipment->treatments()->detach($treatment);
+        session(['message'=>'Tratamiento BORRADO correctamente']);
+        $this->emit('notify');
     }
 
 }
