@@ -1,11 +1,11 @@
 <div>
-  <div class="flex text-white text-xsm w-full p-1 items-center bg-gray-800 opacity-70 bg-opacity-50">
+  <div class="flex items-center w-full p-1 text-white bg-gray-800 bg-opacity-50 text-xsm opacity-70">
     @if ($notified)
-      <button wire:click="$toggle('notified')" class="rounded-full border p-1 transition-all animate-pulse">
+      <button wire:click="$toggle('notified')" class="p-1 transition-all border rounded-full animate-pulse">
         <x-svg.pin />
       </button>
     @else
-      <button wire:click="$toggle('notified')" class="rounded-full border p-1">
+      <button wire:click="$toggle('notified')" class="p-1 border rounded-full">
         <x-svg.check />
       </button>
     @endif
@@ -28,7 +28,9 @@
       <p class="mr-2"><x-svg.equipment class="inline-block" /> {{ Session::get('equipment')->name }}</p>
     @endif
     @if (Session::has('operator'))
+    <button wire:click="clearOperator()">
       <p class="mr-2"><x-svg.operator class="inline-block" /> {{ Session::get('operator')->name }}</p>
+    </button>
     @endif
     @if (Session::has('message'))
       <p class="mr-2"><x-svg.chat class="inline-block" /> {{ Session::get('message') }}</p>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use Illuminate\Contracts\Session\Session;
 use Livewire\Component;
 
 class Notifications extends Component
@@ -18,5 +19,10 @@ class Notifications extends Component
     public function render()
     {
         return view('livewire.notifications',['notified'=>$this->notified]);
+    }
+
+    public function clearOperator()
+    {
+        session()->forget('operator');
     }
 }

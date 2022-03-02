@@ -4,6 +4,17 @@
   <x-jet-dialog-modal wire:model="dayModal">
     <x-slot name="title">Agenda del día {{ Carbon\Carbon::parse($daySelected)->format('d M') }}</x-slot>
     <x-slot name="content">
+      <select wire:model="equipment_treatment" class="rounded-md">
+        @foreach ($equipment_treatments as $treatment)
+          <option value="{{ $treatment->id }}">{{ $treatment->name }}</option>
+        @endforeach
+      </select>
+      Duración: {{ $selected_treatment->duration ?? 0 }} minutos
+      <select>
+        @foreach ($availSlots as $avail)
+          <option>{{ $avail['start'] }} ({{ $avail['diff'] }}min.)</option>
+        @endforeach
+      </select>
       <table class="table table-sm table-hover">
         <thead>
           <tr>
@@ -15,10 +26,22 @@
         </thead>
         <tbody>
           @foreach ($daySlots as $slot)
-            <tr>
-              <td>{{Carbon\Carbon::parse($slot)->format('H:i')}}</td>
-              <td>Cliente</td>
-              <td>Servicio</td>
+            <tr class="{{ $slot['booked'] ? 'active' . $slot['bgcolor'] : '' }}">
+              <td class="text-center {{ $slot['pickable'] ? 'bg-green-900 bg-opacity-20' : '' }}">
+                @if ($slot['pickable'])
+                  <button wire:click="bookCustomerTreatment('{{ $slot['time'] }}')">
+                @endif
+                {{ $slot['time'] }}
+                @if ($slot['pickable'])
+                  </button>
+                @endif
+
+
+                {{ $slot['booked'] == true ? ' a ' . $slot['ends'] : '' }}
+              </td>
+              <td>{{ $slot['booked'] == true ? $slot['customer'] : '' }}</td>
+              <td>
+                {{ $slot['booked'] == true ? $slot['treatment'] : '' }}</td>
               <td>
                 <button type="submit" class="btn btn-sm btn-danger">
                   <i class="fa fa-trash"></i>
@@ -49,7 +72,8 @@
     @else
       <div
         class="flex-none h-20 overflow-hidden text-center bg-cover rounded-t lg:h-auto lg:w-32 lg:rounded-t-none lg:rounded-l"
-        style="background-image: url('{{ Storage::url($equipment->image_path) }}')" title="{{ $equipment->name }}">
+        style="background-image: url('{{ Storage::url($equipment->image_path) }}')"
+        title="{{ $equipment->name }}">
       </div>
     @endif
 
@@ -62,7 +86,7 @@
     </div>
   </div>
 
-  <div class="flex w-full p-3 my-2 bg-white shadow-md rounded">
+  <div class="flex w-full p-3 my-2 bg-white rounded shadow-md">
     <div class="inline-block w-1/2 sm:w-1/3">
       <x-jet-label>Fecha desde</x-jet-label>
       <x-jet-input type="date" wire:model="startDate" required class="w-full" />
@@ -97,7 +121,7 @@
     </div>
 
     <div>
-      <table class="my-3 shadow-md calendar">
+      <table class="my-3 bg-white shadow-md">
         <thead>
           <tr>
             <th>Inicio</th>

@@ -6,6 +6,28 @@
   --caption-color: hsl(278, 100%, 45%, 1);
   --header-color: #cc93ec;
   --booked-color: #ecceff;
+	--td-line: hsl(278, 100%, 45%, 0.2);
+}
+
+.active{
+	background-color: #4285f4!important;
+	color: white!important;
+}
+.active1{
+	background-color: #4285f4!important;
+	color: white!important;
+}
+.active2{
+	background-color: #db4437!important;
+	color: white!important;
+}
+.active3{
+	background-color: #f4b400!important;
+	color: black!important;
+}
+.active4{
+	background-color: #0f9d58!important;
+	color: white!important;
 }
 
 button.calendar{
@@ -56,6 +78,10 @@ table th{
 	color: white;
 	padding: 0.5rem;
 }
+table td{
+	padding: 0.5rem;
+	border: 1px solid var(--td-line);
+}
 
 table.calendar {
 	margin: auto;
@@ -98,8 +124,7 @@ table.calendar td {
 	border-width: 2px;
 	border-style: solid;
 	border-color: var(--primary-color) var(--secondary-color);
-	padding-left: 0rem;
-	padding-right: 0rem;
+	padding: 0rem;
 }
 
 table.calendar td {

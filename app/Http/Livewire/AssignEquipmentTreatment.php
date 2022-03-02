@@ -2,10 +2,11 @@
 
 namespace App\Http\Livewire;
 
+use Carbon\Carbon;
 use Livewire\Component;
 use App\Models\Equipment;
 use App\Models\Treatment;
-use Carbon\Carbon;
+use Illuminate\Support\Facades\Session;
 
 class AssignEquipmentTreatment extends Component
 {
@@ -14,22 +15,24 @@ class AssignEquipmentTreatment extends Component
     public $treatments=[];
     public $equipment_search='';
     public $treatment_search='';
-    public $equipment_treatments=[];
     public $selected_equipment=null;
+    public $assigned_treaments=[];
 
     public function mount(){
-        if(session('equipment')){
+        if (Session::has('equipment')) {
             $this->selected_equipment=session('equipment');
+        }else{
+            return redirect()->route('equipment');
         }
     }
 
     public function render()
     {
-      $assignedtreatments=$this->selected_equipment->treatments;
-      session(['message'=>Carbon::now()->format('d-m-Y H:i:s')." - ".$this->selected_equipment->name]);
-      $this->emit('notify');
+      $this->assigned_treatments=$this->selected_equipment->treatments()->get();
       return view('livewire.assign-equipment-treatment',
-        compact('assignedtreatments'));
+        [
+          'assignedtreatments'=>$this->assigned_treatments,
+        ]);
     }    
 
     public function EquipmentSearch(){
@@ -61,8 +64,6 @@ class AssignEquipmentTreatment extends Component
     public function unassignTreatment($treatment_id){
         $treatment=Treatment::find($treatment_id);
         $this->selected_equipment->treatments()->detach($treatment);
-        session(['message'=>'Tratamiento BORRADO correctamente']);
-        $this->emit('notify');
     }
 
 }

@@ -2,9 +2,10 @@
 
 namespace App\Http\Livewire;
 
-use Carbon\Carbon;
 use App\Models\Booking;
 use Livewire\Component;
+use App\Models\Treatment;
+use Illuminate\Support\Carbon;
 use Carbon\CarbonInterval;
 use Illuminate\Support\Facades\Session;
 
@@ -14,10 +15,13 @@ class ShowCalendar extends Component
     public $calendar=null;
     public $unixCalendar=[];
     public $equipment=null;
+    public $selected_treatment=null;
     public $message=null;
-    public $available=false;
     public $bookings=[];
     public $dayModal=false;
+    public $equipment_treatments=[];
+    // available enables the user to book dates
+    public $available=false;
 
     public $startDate;
     public $endDate;
@@ -25,11 +29,24 @@ class ShowCalendar extends Component
     public $daySlots=[];
     public $startTime="12:00";
     public $endTime="12:00";
+    public $equipment_treatment=null; // helper select-options
+
+    public $rules=[
+        'startDate'=>'required|date',
+        'endDate'=>'required|date',
+        'startTime'=>'required',
+        'endTime'=>'required',
+        'equipment_treatment'=>'required',
+    ];
 
     public function mount()
     {
         if (Session::has('equipment')) {
             $this->equipment=session('equipment');
+            $this->equipment_treatments=$this->equipment->treatments()->get();
+            $this->equipment_treatment=$this->equipment_treatments[0];
+            $this->selected_treatment=$this->equipment_treatments[0];
+            //$this->updatedEquipmentTreatment($this->equipment_treatment);
         }else{
             //redirect to equipment page
             return redirect()->route('equipment');
@@ -43,16 +60,75 @@ class ShowCalendar extends Component
         $this->calendar=$this->renderCalendar($this->now);
     }
 
-    public function render()
-    {
+    public function render(){
         return view('livewire.show-calendar',[
             'calendar'=>$this->calendar,
             'equipment'=>$this->equipment,
+            'availSlots'=>$this->checkAvailableSlots(),
         ]);
     }
 
-    public function updatedStartDate($startDate)
-    {
+    public function createDaySlots($date){
+        // create day array parsed every 5 minutes starting from 00:00 until 23:55
+        $datePicked=Carbon::parse($date);
+        $start=Carbon::parse($date.' 06:00');
+        $finish=Carbon::parse($date.' 21:55');
+        $interval=CarbonInterval::minutes(5);
+
+        // get all the bookings for the day for the equipment
+        $bookings=\App\Models\Booking::where('equipment_id',$this->equipment->id)
+            // customer_id not null
+            ->whereNotNull('customer_id')
+            ->where('start_date','>=',$datePicked->format('Y-m-d'))
+            ->get();
+
+        $day=[]; $lastRecord=0; $record_id=0;
+        while($start<=$finish){
+            // check if $start is in bookings start_date and end_date
+            $booked=false;
+            foreach($bookings as $booking){
+                if($booking->start_date<=$start && $booking->end_date>=$start){
+                    $booked=true;
+                    if($booking->id!=$lastRecord){
+                        $record_id++;
+                        $lastRecord=$booking->id;
+                    }
+                    break;
+                }
+            }
+
+            if($booked){
+                $day[$start->format('H:i')]=[
+                    'time'=>$start->format('H:i'),
+                    'ends'=>Carbon::parse($booking->end_date)->format('H:i'),
+                    'booked'=>$booked,
+                    'bgcolor'=>($record_id % 4)+1,
+                    'customer'=>\App\Models\Customer::find($booking->customer_id)->name,
+                    'treatment'=>\App\Models\Treatment::find($booking->treatment_id)->name,
+                    'pickable'=>false,
+                    ];
+                    // set the start time to the end of the booking
+                    $start=Carbon::parse($booking->end_date);
+            }else{
+                $day[$start->format('H:i')]=[
+                    'time'=>$start->format('H:i'),
+                    'ends'=>null,
+                    'booked'=>$booked,
+                    'bgcolor'=>0,
+                    'customer'=>null,
+                    'treatment'=>null,
+                    'pickable'=>false,
+                ];
+            }
+            
+            $start->add($interval);
+        }
+        $this->daySelected=$datePicked->copy();
+        $this->daySlots=$day;
+        $this->dayModal=true;
+    }
+
+    public function updatedStartDate($startDate){
         $this->message=null;
         $this->available=false;
         
@@ -63,8 +139,7 @@ class ShowCalendar extends Component
         }
     }
 
-    public function updatedEndDate($endDate)
-    {
+    public function updatedEndDate($endDate){
         $this->message=null;
         $this->available=false;
 
@@ -72,6 +147,72 @@ class ShowCalendar extends Component
         if($endDate<$this->startDate){
             $this->endDate=$this->startDate;
         }
+    }
+
+    public function checkAvailableSlots(){ 
+        //returns an array of available slots
+        $slotStart=null;
+        $slotEnd=null;
+        $freeSlots=[];
+        foreach($this->daySlots as $slot){
+            if($slotStart==null){
+                $slotStart=$slot['time'];
+            }
+            if($slotStart!=null && $slot['ends']==null){
+                $slotEnd=$slot['time'];
+            }
+
+            if($slot['ends']!=null){
+                $freeSlots[]=[
+                    'start'=>$slotStart,
+                    //'ends'=>$slotEnd,
+                    'ends'=>Carbon::parse($slotEnd)->subMinutes($this->selected_treatment->duration)->format('H:i'),
+                    'diff'=>Carbon::parse($slotEnd)->diffInMinutes(Carbon::parse($slotStart)),
+                ];
+                $slotStart=null;
+                $slotEnd=null;
+            }
+        }
+        // add the last slot
+        if ($slotStart!=null) {
+            $freeSlots[]=[
+                'start'=>$slotStart,
+                // ends is slotend minus seleted_treatment->duration
+                'ends'=>Carbon::parse($slotEnd)->subMinutes($this->selected_treatment->duration)->format('H:i'),
+                
+                //'ends'=>$slotEnd,
+                'diff'=>Carbon::parse($slotEnd)->diffInMinutes(Carbon::parse($slotStart)),
+            ];
+        }
+        // delete from $freeSlots those slots that end is before start
+        $freeSlots2=[];
+        foreach($freeSlots as $slot){
+            if($slot['ends']>$slot['start']){
+                $freeSlots2[]=$slot;
+            }
+        }
+        return $freeSlots2;
+    }
+
+    public function updatedEquipmentTreatment($equipment_treatment){
+        $this->selected_treatment=Treatment::find($equipment_treatment);
+        // check for available slots
+        $available=$this->checkAvailableSlots();
+
+        if (count($available)>0) {
+            // set daySlots['pickable'] to true
+            foreach ($available as $avail) {
+                // for every 5 minutes from start to end set pickable to true
+                $start=Carbon::parse($avail['start']);
+                $end=Carbon::parse($avail['ends']);
+                $interval=CarbonInterval::minutes(5);
+                while ($start<=$end) {
+                    $this->daySlots[$start->format('H:i')]['pickable']=true;
+                    $start->add($interval);
+                }
+            }
+        }
+        $this->render();
     }
 
     public function checkAvailability(){
@@ -84,6 +225,7 @@ class ShowCalendar extends Component
         $this->message=null;
         // Check if there are any bookings for the current months range
         $exists = Booking::where('equipment_id', $this->equipment->id)
+        ->where('customer_id',null)
         ->byBusy($this->startDate, $this->endDate)
         ->get();
         if(count($exists)>0){
@@ -122,24 +264,47 @@ class ShowCalendar extends Component
             $this->message="Debe seleccionar un cliente";
             return;
         }
-
-        // create day array parsed every 5 minutes starting from 00:00 until 23:55
-        $datePicked=Carbon::parse($date);
-        $start=Carbon::parse($date.' 06:00');
-        $finish=Carbon::parse($date.' 21:55');
-        $interval=CarbonInterval::minutes(5);
-        $day=[];
-        while($start<=$finish){
-            $day[]=$start->format('Y-m-d H:i');
-            $start->add($interval);
-        }
-        $this->daySelected=$datePicked->copy();
-        $this->daySlots=$day;
-        $this->dayModal=true;
-        //dd($datePicked,$day);
-       
+        $this->createDaySlots($date);
     }
 
+    public function bookCustomerTreatment($start){
+        if (!Session::has('customer')) {
+            $this->message="Debe seleccionar un cliente";
+            return;
+        }
+        if (!$this->selected_treatment) {
+            $this->message="Debe seleccionar un tratamiento";
+            return;
+        }
+
+        $end=Carbon::parse($start)->addMinutes($this->selected_treatment->duration)->format('H:i');
+
+        $booking=new Booking();
+        $booking->equipment_id=$this->equipment->id;
+        $booking->treatment_id=$this->selected_treatment->id;
+        $booking->customer_id=Session::get('customer')->id;
+        $booking->user_id=auth()->user()->id;
+        $booking->start_date=$this->daySelected->format('Y-m-d').' '.$start;
+        $booking->end_date=$this->daySelected->format('Y-m-d').' '.$end;
+        $booking->status='pending';
+        $booking->price=$this->selected_treatment->price;
+        if (Session::has('operator')) {
+            $booking->operator_id=Session::get('operator')->id;
+            $booking->operator_price=$this->selected_treatment->operatorPrice;
+        }else{
+            $booking->operator_id=null;
+            $booking->operator_price=0;
+        }
+
+        $booking->save();
+        // $this->reset('startDate','endDate');
+        // refresh calendar
+        $this->populateUnixCalendar();
+        $this->calendar=$this->renderCalendar($this->now);
+        $this->dayModal=false;
+        return redirect()->route('calendar');
+
+    }
 
     private function populateUnixCalendar() {
         // Make sure to start at the beginnen of the month
@@ -150,7 +315,6 @@ class ShowCalendar extends Component
         if(!isset($lastBookedDate->status)){
             return;
         }        
-        //dd($lastBookedDate, isset($lastBookedDate->status));
         $lastBookedDate=Carbon::parse($lastBookedDate->end_date);
         // get last day of month of $lastBookedDate
         $lastBookedDate=$lastBookedDate->endOfMonth();
@@ -166,6 +330,7 @@ class ShowCalendar extends Component
 
         // Check if there are any bookings for the current months range
         $exists = Booking::where('equipment_id', $this->equipment->id)
+            ->where('customer_id',null)
             ->byBusy($now->toDateString(), $lastBookedDate->toDateString())
             ->get();
 
@@ -188,7 +353,7 @@ class ShowCalendar extends Component
         $now->startOfMonth();
         $lastBookedDate=Booking::lastBookedDate($this->equipment->id);
         if (!isset($lastBookedDate->status)){
-            $calendar="<h3 class='w-full p-3 mx-auto text-white text-center text-lg font-bold'>No hay reservas</h3>";
+            $calendar="<h3 class='w-full p-3 mx-auto text-lg font-bold text-center text-white'>No hay reservas</h3>";
             return $calendar;
         }
         $lastBookedDate=Carbon::parse($lastBookedDate->end_date);
@@ -240,7 +405,7 @@ class ShowCalendar extends Component
                 }
                 // Append the column
                 $calendar .= '<td class="day '.$this->unixCalendar[$month->format('Ymd')].'" rel="'.$month->format('Y-m-d').'">'.
-                '<button class="calendar w-full h-full" wire:click="bookCustomer(\''.$month->format('Y-m-d').'\')">'.
+                '<button class="w-full h-full calendar" wire:click="bookCustomer(\''.$month->format('Y-m-d').'\')">'.
                     $month->day.
                 '</button></td>';
     

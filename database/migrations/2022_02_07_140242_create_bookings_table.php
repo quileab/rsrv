@@ -23,7 +23,8 @@ class CreateBookingsTable extends Migration
             $table->dateTime('start_date');
             $table->dateTime('end_date');
             $table->string('status',10)->default('pending');
-            $table->decimal('price',10,2)->nullable();
+            $table->decimal('price',10,2)->unsigned()->nullable();
+            $table->decimal('operator_price',10,2)->unsigned()->nullable();
             $table->timestamps();
         });
     }

@@ -35,24 +35,24 @@
           </div>
         </div>
         <div class="flex justify-between w-full my-1">
-          <div class="mx-1 w-1/2">
+          <div class="w-1/2 mx-1">
             <x-jet-label for="equip_serial_number">Número de Serie</x-label>
               <x-jet-input type="text" wire:model.defer="equip_serial_number" maxlength="60" />
               <x-jet-input-error for="equip_serial_number" class="mt-1" />
           </div>
-          <div class="mx-1 w-1/2">
+          <div class="w-1/2 mx-1">
             <x-jet-label for="equip_model">Modelo</x-label>
               <x-jet-input type="text" wire:model.defer="equip_model" maxlength="60" />
               <x-jet-input-error for="equip_model" class="mt-1" />
           </div>
         </div>
         <div class="flex justify-between w-full my-1">
-          <div class="mx-1 w-1/2">
+          <div class="w-1/2 mx-1">
             <x-jet-label for="equip_manufacturer">Fabricante</x-label>
               <x-jet-input type="text" wire:model.defer="equip_manufacturer" />
               <x-jet-input-error for="equip_manufacturer" class="mt-1" />
           </div>
-          <div class="mx-1 w-1/2">
+          <div class="w-1/2 mx-1">
             <x-jet-label for="equip_location_id">Ubicación</x-label>
               <select wire:model.defer="equip_location_id">
                 <option value="">Sin Definir</option>
@@ -64,11 +64,11 @@
           </div>
         </div>
         <div class="flex justify-between w-full my-1">
-          <div class="mx-1 w-1/2 border shadow-md overflow-clip p-2 bg-violet-200">
+          <div class="w-1/2 p-2 mx-1 border shadow-md overflow-clip bg-violet-200">
             <div class="flex justify-between">
 
               <button wire:click="$toggle('imageSelect')"
-                class="text-sm bg-purple-500 hover:bg-purple-700 text-white font-bold py-1 px-3 rounded-md h-11">
+                class="px-3 py-1 text-sm font-bold text-white bg-purple-500 rounded-md hover:bg-purple-700 h-11">
                 Cambiar Imagen
               </button>
 
@@ -88,9 +88,7 @@
               <x-jet-input-error for="equip_image_path" class="mt-1" />
 
               <x-jet-input
-                class="form-control block w-full text-base font-normal
-              text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300
-                rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-blue-700 focus:border-blue-600 focus:outline-none"
+                class="block w-full m-0 text-base font-normal text-gray-700 transition ease-in-out bg-white border border-gray-300 border-solid rounded form-control bg-clip-padding focus:text-gray-700 focus:bg-blue-700 focus:border-blue-600 focus:outline-none"
                 type="file" wire:model="image" />
               @error('image')
                 <span class="error">{{ $message }}</span>
@@ -107,14 +105,14 @@
             @endif
           </div>
 
-          <div class="mx-1 w-1/2 p-2">
+          <div class="w-1/2 p-2 mx-1">
 
             <x-jet-label for="equip_price">Precio <small>(por día)</small></x-jet-label>
             <x-jet-input type="number" wire:model.defer="equip_price" min="0" step=".01" />
             <x-jet-input-error for="equip_price" class="mt-1" />
             <div class="flex items-center mt-2">
               <x-jet-label for="equip_status">Estado&nbsp;</x-jet-label>
-              <select wire:model.defer="equip_status" class="border bg-white rounded pl-2 pr-5 py-1 outline-none">
+              <select wire:model.defer="equip_status" class="py-1 pl-2 pr-5 bg-white border rounded outline-none">
                 <option value="">Activo</option>
                 <option value="0">Inactivo</option>
               </select>
@@ -148,13 +146,10 @@
         <img class="h-32 rounded-t-lg" src="{{ asset('img\1299218539-612x612.jpg') }}" alt="Nuevo equipo" />
         <div class="p-4">
           <h5 class="w-full text-lg font-medium text-gray-900 h-7 overflow-clip">Nuevo Equipo</h5>
-          <p class="text-gray-700 text-sm mb-4 h-20 text-ellipsis overflow-hidden ...">
-            Agregar un nuevo equipo a la lista de equipos.
-          </p>
 
           <button type="button" wire:click='create()'
             class="flex bg-indigo-600 text-white w-full px-6 py-2.5 font-medium text-xs uppercase rounded shadow-md hover:bg-indigo-700 hover:shadow-lg focus:bg-indigo-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-indigo-800 active:shadow-lg transition duration-150 ease-in-out items-center">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24"
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="none" viewBox="0 0 24 24"
               stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -175,9 +170,11 @@
         @endif
         <div class="p-4">
           <h5 class="w-full text-lg font-medium text-gray-900 h-7 overflow-clip">{{ $item->name }}</h5>
+          @if (!Auth::user()->role == 'admin')
           <p class="text-gray-700 text-sm mb-4 h-20 text-ellipsis overflow-hidden ...">
             {{ $item->description }}
           </p>
+          @endif
 
           <button type="button" wire:click='reserve({{ $item->id }})'
             class="bg-indigo-600 text-white w-full inline-block px-6 py-2.5 font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-indigo-700 hover:shadow-lg focus:bg-indigo-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-indigo-800 active:shadow-lg transition duration-150 ease-in-out">
@@ -188,24 +185,16 @@
             <div class="flex w-full mt-1 text-center justify-evenly">
               <button wire:click='edit({{ $item->id }})'
                 class="inline-block px-3 py-1 text-xs font-medium leading-tight text-white uppercase transition duration-150 ease-in-out bg-blue-600 rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
-                  stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                </svg>
+                <x-svg.edit class="w-5 h-5" />
               </button>
               <button wire:click='selectTreatments({{ $item->id }})'
                 class="inline-block px-3 py-1 text-xs font-medium leading-tight text-white uppercase transition duration-150 ease-in-out bg-green-600 rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg">
-                Tratamientos
+                <x-svg.collection class="w-5 h-5" />
               </button>
               {{-- button to delete card --}}
               <button wire:click='confirmDelete({{ $item->id }})'
                 class="inline-block px-3 py-1 text-xs font-medium leading-tight text-white uppercase transition duration-150 ease-in-out bg-red-600 rounded shadow-md hover:bg-red-700 hover:shadow-lg focus:bg-red-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-red-800 active:shadow-lg">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
-                  stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                </svg>
+                <x-svg.trash class="w-5 h-5" />
               </button>
             </div>
           @endif
