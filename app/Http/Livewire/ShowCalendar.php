@@ -27,15 +27,12 @@ class ShowCalendar extends Component
     public $endDate;
     public $daySelected;
     public $daySlots=[];
-    public $startTime="12:00";
-    public $endTime="12:00";
+
     public $equipment_treatment=null; // helper select-options
 
     public $rules=[
         'startDate'=>'required|date',
         'endDate'=>'required|date',
-        'startTime'=>'required',
-        'endTime'=>'required',
         'equipment_treatment'=>'required',
     ];
 
@@ -53,11 +50,8 @@ class ShowCalendar extends Component
         }
         $this->startDate=Carbon::now()->format('Y-m-d');
         $this->endDate=Carbon::now()->addDays(7)->format('Y-m-d');
-        // pasar a carbon la fecha actual
-        $this->now=Carbon::now();
-        //$this->dt=Carbon::createFromDate(Carbon);
         $this->populateUnixCalendar();
-        $this->calendar=$this->renderCalendar($this->now);
+        $this->calendar=$this->renderCalendar(Carbon::now());
     }
 
     public function render(){
@@ -69,10 +63,12 @@ class ShowCalendar extends Component
     }
 
     public function createDaySlots($date){
-        // create day array parsed every 5 minutes starting from 00:00 until 23:55
+        // create day array parsed every 5 minutes 
+        // starting from 00:00 until 23:55
+        // Fills with bookings
         $datePicked=Carbon::parse($date);
-        $start=Carbon::parse($date.' 06:00');
-        $finish=Carbon::parse($date.' 21:55');
+        $start=Carbon::parse($date.' 07:00');
+        $finish=Carbon::parse($date.' 21:00');
         $interval=CarbonInterval::minutes(5);
 
         // get all the bookings for the day for the equipment
@@ -82,27 +78,24 @@ class ShowCalendar extends Component
             ->where('start_date','>=',$datePicked->format('Y-m-d'))
             ->get();
 
-        $day=[]; $lastRecord=0; $record_id=0;
+        $day=[]; $record_count=0;
         while($start<=$finish){
             // check if $start is in bookings start_date and end_date
-            $booked=false;
+            $booked=0;
             foreach($bookings as $booking){
                 if($booking->start_date<=$start && $booking->end_date>=$start){
-                    $booked=true;
-                    if($booking->id!=$lastRecord){
-                        $record_id++;
-                        $lastRecord=$booking->id;
-                    }
+                    $booked=$booking->id;
                     break;
                 }
             }
 
             if($booked){
+                $record_count++;
                 $day[$start->format('H:i')]=[
                     'time'=>$start->format('H:i'),
                     'ends'=>Carbon::parse($booking->end_date)->format('H:i'),
                     'booked'=>$booked,
-                    'bgcolor'=>($record_id % 4)+1,
+                    'bgcolor'=>($record_count % 4)+1,
                     'customer'=>\App\Models\Customer::find($booking->customer_id)->name,
                     'treatment'=>\App\Models\Treatment::find($booking->treatment_id)->name,
                     'pickable'=>false,
@@ -120,7 +113,6 @@ class ShowCalendar extends Component
                     'pickable'=>false,
                 ];
             }
-            
             $start->add($interval);
         }
         $this->daySelected=$datePicked->copy();
@@ -128,6 +120,7 @@ class ShowCalendar extends Component
         $this->dayModal=true;
     }
 
+    // automatic Livewire update function
     public function updatedStartDate($startDate){
         $this->message=null;
         $this->available=false;
@@ -138,7 +131,7 @@ class ShowCalendar extends Component
             $this->startDate=$today;
         }
     }
-
+    // automatic Livewire update function
     public function updatedEndDate($endDate){
         $this->message=null;
         $this->available=false;
@@ -150,6 +143,11 @@ class ShowCalendar extends Component
     }
 
     public function checkAvailableSlots(){ 
+        // check if treatment is selected
+        if($this->selected_treatment=='null'){
+            $this->emitTo('livewire-toast','showError','Seleccione un Tratamiento');
+            return false;
+        }
         //returns an array of available slots
         $slotStart=null;
         $slotEnd=null;
@@ -158,9 +156,7 @@ class ShowCalendar extends Component
             if($slotStart==null){
                 $slotStart=$slot['time'];
             }
-            if($slotStart!=null && $slot['ends']==null){
-                $slotEnd=$slot['time'];
-            }
+            $slotEnd=$slot['time'];
 
             if($slot['ends']!=null){
                 $freeSlots[]=[
@@ -173,14 +169,12 @@ class ShowCalendar extends Component
                 $slotEnd=null;
             }
         }
-        // add the last slot
+        // add the last slot if it is started
         if ($slotStart!=null) {
             $freeSlots[]=[
                 'start'=>$slotStart,
                 // ends is slotend minus seleted_treatment->duration
                 'ends'=>Carbon::parse($slotEnd)->subMinutes($this->selected_treatment->duration)->format('H:i'),
-                
-                //'ends'=>$slotEnd,
                 'diff'=>Carbon::parse($slotEnd)->diffInMinutes(Carbon::parse($slotStart)),
             ];
         }
@@ -195,6 +189,13 @@ class ShowCalendar extends Component
     }
 
     public function updatedEquipmentTreatment($equipment_treatment){
+        if ($equipment_treatment=='null') {
+            $this->emitTo('livewire-toast','showError','Seleccione un Tratamiento');
+            $this->available=false;
+            return;
+        }
+        // Recreate Dayslots and populate with bookings
+        $this->createDaySlots($this->daySelected->format('Y-m-d'));
         $this->selected_treatment=Treatment::find($equipment_treatment);
         // check for available slots
         $available=$this->checkAvailableSlots();
@@ -212,7 +213,6 @@ class ShowCalendar extends Component
                 }
             }
         }
-        $this->render();
     }
 
     public function checkAvailability(){
@@ -247,33 +247,38 @@ class ShowCalendar extends Component
         $booking=new Booking();
         $booking->equipment_id=$this->equipment->id;
         $booking->user_id=auth()->user()->id;
-        $booking->start_date=$this->startDate.' '.$this->startTime;
-        $booking->end_date=$this->endDate.' '.$this->endTime;
+        $booking->start_date=$this->startDate.' 12:00';
+        $booking->end_date=$this->endDate.' 12:00';
         $booking->status='pending';
         $booking->price=$this->equipment->price;
         $booking->save();
         // $this->reset('startDate','endDate');
         // refresh calendar
         $this->populateUnixCalendar();
-        $this->calendar=$this->renderCalendar($this->now);
-        $this->render();
+        $this->calendar=$this->renderCalendar(Carbon::now());
     }
 
     public function bookCustomer($date){
         if (!Session::has('customer')) {
-            $this->message="Debe seleccionar un cliente";
+            $this->emitTo('livewire-toast','showError','Seleccione un Cliente');
             return;
         }
         $this->createDaySlots($date);
     }
 
     public function bookCustomerTreatment($start){
+        //dd($this->equipment_treatment);
         if (!Session::has('customer')) {
-            $this->message="Debe seleccionar un cliente";
+            $this->emitTo('livewire-toast','showError','Seleccione un Cliente');
+            return;
+        }
+        if ($this->equipment_treatment=='null') {
+            $this->emitTo('livewire-toast','showError','Seleccione un Tratamiento');
+            $this->available=false;
             return;
         }
         if (!$this->selected_treatment) {
-            $this->message="Debe seleccionar un tratamiento";
+            $this->emitTo('livewire-toast','showError','Seleccione un Tratamiento');
             return;
         }
 
@@ -297,13 +302,17 @@ class ShowCalendar extends Component
         }
 
         $booking->save();
-        // $this->reset('startDate','endDate');
-        // refresh calendar
-        $this->populateUnixCalendar();
-        $this->calendar=$this->renderCalendar($this->now);
-        $this->dayModal=false;
-        return redirect()->route('calendar');
 
+        $this->updatedEquipmentTreatment($this->equipment_treatment);
+    }
+
+    public function cancelCustomerBooking($id){
+        //dd($this->daySelected) if a Carbon instance
+        $booking=Booking::find($id);
+        // delete record from database
+        $booking->delete();
+        // refresh calendar
+        $this->createDaySlots($this->daySelected->format('Y-m-d'));
     }
 
     private function populateUnixCalendar() {
@@ -425,5 +434,5 @@ class ShowCalendar extends Component
         // Return calendar html
         return $calendar;
     }
-    
+   
 }

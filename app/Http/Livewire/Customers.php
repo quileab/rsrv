@@ -11,6 +11,8 @@ class Customers extends Component
     public $confirmation=false;
     public $editModal=false;
     public $deleteItem=null;
+    public $search='';
+    public $records=[];
 
     // Model Customer fields
     public $model_id;
@@ -22,38 +24,42 @@ class Customers extends Component
     public $model_location_id=null;
     public $model_user_id=null;
 
-    public function render()
+    public function mount()
     {
-        $records=Customer::all();
+        $this->records=Customer::limit(15)->get();
+    }    
+    
+    public function render(){
         $locations=\App\Models\Location::all();
         $users=\App\Models\User::all();
         return view('livewire.customers',
-        ['records'=>$records,'locations'=>$locations,'users'=>$users]);
+        ['records'=>$this->records,'locations'=>$locations,'users'=>$users]);
     }
 
-    public function pin($id)
-    {
+    public function pin($id){
         session(['customer'=>Customer::find($id)]);
         $this->emit('notify');
+        $this->emitTo('livewire-toast','show','Seleccionaste un cliente');
     }
 
-    public function deleteItem($id)
-    {
+    public function searchRecords(){
+        $this->records=Customer::where('name','like','%'.$this->search.'%')->limit(15)->get();
+    }
+
+    public function deleteItem($id){
         $this->deleteItem=Customer::find($id);
         $this->confirm['title']='¿Borrar '.$this->model_name.'?';
         $this->confirm['question']='¿Estás seguro?';
         $this->confirm['show']=true;
     }
 
-    public function delete()
-    {
+    public function delete(){
         $this->deleteItem->delete();
         $this->confirm['show']=false;
         $this->editModal=false;
     }
 
-    public function edit($id)
-    {
+    public function edit($id){
         $record=Customer::find($id);
         $this->model_id=$record->id;
         $this->model_name=$record->name;
@@ -66,8 +72,7 @@ class Customers extends Component
         $this->editModal=true;
     }
 
-    public function saveEdit($id)
-    {
+    public function saveEdit($id){
         $record=Customer::find($id);
         $record->name=$this->model_name;
         $record->pid=$this->model_pid;
@@ -80,8 +85,7 @@ class Customers extends Component
         $this->editModal=false;
     }
     
-    public function create()
-    {
+    public function create(){
         $this->model_id=null;
         $this->model_name='';
         $this->model_pid=null;
@@ -93,8 +97,7 @@ class Customers extends Component
         $this->editModal=true;
     }
 
-    public function saveNewItem()
-    { 
+    public function saveNewItem(){ 
         $record=new Customer;
         $record->name=$this->model_name;
         $record->pid=$this->model_pid;

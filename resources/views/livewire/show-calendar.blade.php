@@ -1,16 +1,36 @@
 <div class="mx-5">
-
   {{-- jetstream modal, daily booking selection --}}
   <x-jet-dialog-modal wire:model="dayModal">
-    <x-slot name="title">Agenda del día {{ Carbon\Carbon::parse($daySelected)->format('d M') }}</x-slot>
+    <x-slot name="title">Agenda del día {{ Carbon\Carbon::parse($daySelected)->format('d M') }}
+      @livewire('livewire-toast')
+      <div class="flex items-center justify-around w-full text-xs text-white">
+        @if (Session::has('location'))
+          <p class="mr-2"><x-svg.location class="inline-block" /> {{ Session::get('location')->name }}</p>
+        @endif
+        @if (Session::has('customer'))
+          <p class="mr-2"><x-svg.user class="inline-block" /> {{ Session::get('customer')->name }}</p>
+        @endif
+        @if (Session::has('equipment'))
+          <p class="mr-2"><x-svg.equipment class="inline-block" /> {{ Session::get('equipment')->name }}</p>
+        @endif
+        @if (Session::has('operator'))
+          <button wire:click="clearOperator()">
+            <p class="mr-2"><x-svg.operator class="inline-block" /> {{ Session::get('operator')->name }}</p>
+          </button>
+        @endif
+      </div>
+    </x-slot>
     <x-slot name="content">
+
       <select wire:model="equipment_treatment" class="rounded-md">
+        <option value="null">Seleccione Tratamiento</option>
         @foreach ($equipment_treatments as $treatment)
           <option value="{{ $treatment->id }}">{{ $treatment->name }}</option>
         @endforeach
       </select>
-      Duración: {{ $selected_treatment->duration ?? 0 }} minutos
-      <select>
+      ⏱ {{ $selected_treatment->duration ?? 0 }} min.
+      <select class="rounded-md">
+        <option selected>⏱Ayuda</option>
         @foreach ($availSlots as $avail)
           <option>{{ $avail['start'] }} ({{ $avail['diff'] }}min.)</option>
         @endforeach
@@ -36,16 +56,19 @@
                   </button>
                 @endif
 
-
                 {{ $slot['booked'] == true ? ' a ' . $slot['ends'] : '' }}
               </td>
-              <td>{{ $slot['booked'] == true ? $slot['customer'] : '' }}</td>
+              <td>
+                {{ $slot['booked'] == true ? $slot['customer'] : '' }}</td>
               <td>
                 {{ $slot['booked'] == true ? $slot['treatment'] : '' }}</td>
-              <td>
-                <button type="submit" class="btn btn-sm btn-danger">
-                  <i class="fa fa-trash"></i>
-                </button>
+              <td class="text-center">
+                @if ($slot['booked'])
+                  <button wire:click="cancelCustomerBooking('{{ $slot['booked'] }}')"
+                    class="px-3 py-1 text-red-600 bg-gray-100 rounded-sm shadow-md hover:bg-gray-200">
+                    <x-svg.trash class="m-auto" />  
+                  </button>
+                @endif
               </td>
             </tr>
           @endforeach
@@ -56,9 +79,6 @@
       <x-jet-secondary-button wire:click="$toggle('dayModal')">
         Cancelar
       </x-jet-secondary-button>
-      <x-jet-danger-button class="ml-2" wire:click="bookCustomerTreatment()">
-        <x-svg.check class="w-5 h-5" />&nbsp;Agendar
-      </x-jet-danger-button>
     </x-slot>
   </x-jet-dialog-modal>
 
@@ -141,5 +161,4 @@
       </table>
     </div>
   </div>
-
 </div>

@@ -2,18 +2,18 @@
   <div class="flex items-center w-full p-1 text-white bg-gray-800 bg-opacity-50 text-xsm opacity-70">
     @if ($notified)
       <button wire:click="$toggle('notified')" class="p-1 transition-all border rounded-full animate-pulse">
-        <x-svg.pin />
+        <x-svg.check />
       </button>
     @else
       <button wire:click="$toggle('notified')" class="p-1 border rounded-full">
-        <x-svg.check />
+        <x-svg.infoLg />
       </button>
     @endif
     
     <div @class([
         'text-sm' => true,
-        'hidden' => !$notified,
-        'w-full' => $notified,
+        // 'hidden' => !$notified,
+        // 'w-full' => $notified,
         'flex' => true,
         'ml-2' => true,
       ])>

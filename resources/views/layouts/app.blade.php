@@ -20,27 +20,28 @@
         <script src="{{ mix('js/app.js') }}" defer></script>
     </head>
     <body class="font-sans antialiased">
+        @livewire('livewire-toast')
         <x-jet-banner />
-
+        
         <div class="min-h-screen bg-gradient-to-b from-violet-900 to-fuchsia-900">
             @livewire('navigation-menu')
             @livewire('notifications')
-
+            
             <!-- Page Heading -->
             @if (isset($header))
-                <header class="bg-white shadow">
-                    <div class="px-4 py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
-                        {{ $header }}
-                    </div>
-                </header>
+            <header class="bg-white shadow">
+                <div class="px-4 py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
+                    {{ $header }}
+                </div>
+            </header>
             @endif
-
+            
             <!-- Page Content -->
             <main>
                 {{ $slot }}
             </main>
         </div>
-
+        
         @stack('modals')
 
         @livewireScripts

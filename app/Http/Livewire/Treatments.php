@@ -11,6 +11,8 @@ class Treatments extends Component
     public $confirmation=false;
     public $editModal=false;
     public $deleteItem=null;
+    public $search='';
+    public $records=[];
 
     // Model fields
     public $treatment_id;
@@ -19,9 +21,17 @@ class Treatments extends Component
     public $treatment_price=0;
     public $treatment_operatorPrice=0;
 
+    public function mount()
+    {
+        $this->records=Treatment::limit(15)->get();
+    }
+
     public function render(){
-        $treatments=Treatment::all();
-        return view('livewire.treatments',['treatments'=>$treatments]);
+        return view('livewire.treatments',['treatments'=>$this->records]);
+    }
+
+    public function searchRecords(){
+        $this->records=Treatment::where('name','like','%'.$this->search.'%')->limit(15)->get();
     }
 
     public function deleteItem($id){

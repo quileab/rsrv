@@ -11,6 +11,9 @@ class Operators extends Component
     public $confirmation=false;
     public $editModal=false;
     public $deleteItem=null;
+    public $search='';
+    public $records=[];
+    public $locations=[];
 
     // Model Customer fields
     public $model_id;
@@ -21,16 +24,27 @@ class Operators extends Component
     public $model_address=null;
     public $model_location_id=null;
 
+    public function mount()
+    {
+        $this->records=Operator::limit(15)->get();
+        $this->locations=\App\Models\Location::all();
+    }
+
     public function render(){
-        $records=Operator::all();
-        $locations=\App\Models\Location::all();
         return view('livewire.operators',
-        ['records'=>$records,'locations'=>$locations]);
+        ['records'=>$this->records,'locations'=>$this->locations]);
+    }
+
+    public function searchRecords(){
+        $this->records=Operator::where('name','like','%'.$this->search.'%')->limit(15)->get();
     }
 
     public function pin($id){
         session(['operator'=>Operator::find($id)]);
         $this->emit('notify');
+        $this->emitTo('livewire-toast','show',
+            ['message'=>'Operador Seleccionado',
+            'type'=>'info']);
     }
 
     public function deleteItem($id){
@@ -64,7 +78,9 @@ class Operators extends Component
         $record->phone=$this->model_phone;
         $record->email=$this->model_email;
         $record->address=$this->model_address;
-        $record->location_id=$this->model_location_id;
+        if($this->model_location_id!=null){
+            $record->location_id=$this->model_location_id;
+        }
         $record->save();
         $this->editModal=false;
     }
@@ -80,14 +96,16 @@ class Operators extends Component
         $this->editModal=true;
     }
 
-    public function saveNewItem(){ 
+    public function saveNewItem(){
         $record=new Operator;
         $record->name=$this->model_name;
         $record->pid=$this->model_pid;
         $record->phone=$this->model_phone;
         $record->email=$this->model_email;
         $record->address=$this->model_address;
-        $record->location_id=$this->model_location_id;
+        if ($this->model_location_id!=null) {
+            $record->location_id=$this->model_location_id;
+        }
         $record->save();
         $this->editModal=false;
     }

@@ -12,6 +12,8 @@ class Locations extends Component
     public $confirmation=false;
     public $editModal=false;
     public $deleteItem=null;
+    public $search='';
+    public $records=[];
 
     // location fields
     public $location_id;
@@ -20,16 +22,26 @@ class Locations extends Component
     public $location_phone='';
     public $location_email='';
 
+    public function mount()
+    {
+        $this->records=Location::limit(15)->get();
+    }
+
+
     public function render()
     {
-        $locations=Location::all();
-        return view('livewire.locations',['locations'=>$locations]);
+        return view('livewire.locations',['locations'=>$this->records]);
+    }
+
+    public function searchRecords(){
+        $this->records=Location::where('name','like','%'.$this->search.'%')->limit(15)->get();
     }
 
     public function pinLocation($id)
     {
         session(['location'=>Location::find($id)]);
         $this->emit('notify');
+        $this->emitTo('livewire-toast','show','Seleccionaste una ubicación');
     }
 
     public function deleteItem($id)

@@ -354,9 +354,9 @@
         @else
           <a href="{{ route('login') }}" class="text-sm text-gray-800">{{ __('Login') }}</a>
 
-          @if (Route::has('register'))
+          {{-- @if (Route::has('register'))
             <a href="{{ route('register') }}" class="ml-4 text-sm text-gray-800">{{ __('Register') }}</a>
-          @endif
+          @endif --}}
         @endauth
       </div>
     @endif
@@ -372,7 +372,7 @@
       <h1 class="text-xl">RSRV</h1>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 shadow-md" style="background-color: #fff; opacity: 0.7; border-radius: 1rem;">
+    <div class="grid grid-cols-1 shadow-md md:grid-cols-2" style="background-color: #fff; opacity: 0.7; border-radius: 1rem;">
       <div class="p-6">
         <div class="flex items-center">
           <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
